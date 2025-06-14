@@ -1,0 +1,8 @@
+.card {
+  padding: 2em;
+  --main-text-color: lightblue;
+}
+
+.test {
+  color: var(--main-text-color);
+}
