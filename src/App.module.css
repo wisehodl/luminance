@@ -4,7 +4,33 @@
   overflow: hidden;
 }
 
-.mobileMenu {
+.leftMobileMenu {
+  height: 100vh;
+  width: 0;
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  background: white;
+  overflow-x: hidden;
+  transition: 0.5s ease-out;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.leftMenuWrapper {
+  position: absolute;
+  right: 0;
+}
+
+.leftMobileMenu .topNav {
+  display: flex;
+}
+
+.leftMenuWrapper .closeButton {
+  margin: 10px 10px 10px auto;
+}
+
+.rightMobileMenu {
   height: 100vh;
   width: 0;
   position: fixed;
@@ -13,8 +39,13 @@
   right: 0;
   background: white;
   overflow-x: hidden;
-  transition: 0.15s ease-out;
+  transition: 0.5s ease-out;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.rightMenuWrapper {
+  position: absolute;
+  left: 0;
 }
 
 /* Large - Landscape Tablets / Desktops */
@@ -85,14 +116,35 @@
     flex: 1;
   }
 
-  .mobileMenu {
+  .leftMobileMenu {
   }
 
-  .mobileMenu.open {
+  .leftMobileMenu.open {
     width: 80vh;
   }
 
-  .mobileMenu .closeButton {
+  .leftMenuWrapper {
+    width: 80vh;
+  }
+
+  .leftMobileMenu .topNav {
+  }
+
+  .leftMenuWrapper .closeButton {
+  }
+
+  .rightMobileMenu {
+  }
+
+  .rightMobileMenu.open {
+    width: 80vh;
+  }
+
+  .rightMenuWrapper {
+    width: 80vh;
+  }
+
+  .rightMobileMenu .closeButton {
     margin: 10px;
   }
 
@@ -139,7 +191,11 @@
     display: flex;
   }
 
-  .menuButton {
+  .leftMenuButton {
+    margin-right: auto;
+  }
+
+  .rightMenuButton {
     margin-left: auto;
   }
 
@@ -149,14 +205,35 @@
   .mobileBetaZone {
   }
 
-  .mobileMenu {
+  .leftMobileMenu {
   }
 
-  .mobileMenu.open {
+  .leftMobileMenu.open {
     width: 80%;
   }
 
-  .mobileMenu .closeButton {
+  .leftMenuWrapper {
+    width: 80vw;
+  }
+
+  .leftMobileMenu .topNav {
+  }
+
+  .leftMenuWrapper .closeButton {
+  }
+
+  .rightMobileMenu {
+  }
+
+  .rightMobileMenu.open {
+    width: 80%;
+  }
+
+  .rightMenuWrapper {
+    width: 80vw;
+  }
+
+  .rightMobileMenu .closeButton {
     margin: 10px;
   }
 

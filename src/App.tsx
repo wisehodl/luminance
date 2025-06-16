@@ -5,11 +5,19 @@ import ColorValues from "./components/ColorValues/ColorValues";
 import clsx from "clsx";
 
 function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [rightMenuOpen, setRightMenuOpen] = useState(false);
+  const [leftMenuOpen, setLeftMenuOpen] = useState(false);
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  const MenuButton = () => (
-    <button className={styles.menuButton} onClick={toggleMenu}>
+  const toggleRightMenu = () => setRightMenuOpen(!rightMenuOpen);
+  const toggleLeftMenu = () => setLeftMenuOpen(!leftMenuOpen);
+
+  const RightMenuButton = () => (
+    <button className={styles.rightMenuButton} onClick={toggleRightMenu}>
+      ☰
+    </button>
+  );
+  const LeftMenuButton = () => (
+    <button className={styles.leftMenuButton} onClick={toggleLeftMenu}>
       ☰
     </button>
   );
@@ -18,9 +26,12 @@ function App() {
     <div className={styles.appContainer}>
       <div className={styles.mobileContent}>
         <div className={styles.mobileTopNav}>
-          <MenuButton />
+          <LeftMenuButton />
+          <RightMenuButton />
         </div>
-        <div className={styles.mobileLeftNav}></div>
+        <div className={styles.mobileLeftNav}>
+          <LeftMenuButton />
+        </div>
         <div className={styles.mobileAlphaZone}>
           <div className={styles.tabbedContainer}>
             <div className={clsx(styles.tab, styles.colorPickerContainer)}>
@@ -35,15 +46,38 @@ function App() {
           <div className={styles.paletteEditorContainer}></div>
         </div>
         <div className={styles.mobileRightNav}>
-          <MenuButton />
+          <RightMenuButton />
         </div>
       </div>
 
-      <div className={clsx(styles.mobileMenu, { [styles.open]: menuOpen })}>
-        <button className={styles.closeButton} onClick={toggleMenu}>
-          ×
-        </button>
-        <div className={styles.paletteLibraryContainer}>Palette Library</div>
+      <div
+        className={clsx(styles.leftMobileMenu, {
+          [styles.open]: leftMenuOpen,
+        })}
+      >
+        <div className={styles.leftMenuWrapper}>
+          <div className={styles.topNav}>
+            <button className={styles.closeButton} onClick={toggleLeftMenu}>
+              ×
+            </button>
+          </div>
+          <div className={styles.paletteLibraryContainer}>User Info</div>
+        </div>
+      </div>
+
+      <div
+        className={clsx(styles.rightMobileMenu, {
+          [styles.open]: rightMenuOpen,
+        })}
+      >
+        <div className={styles.rightMenuWrapper}>
+          <div className={styles.topNav}>
+            <button className={styles.closeButton} onClick={toggleRightMenu}>
+              ×
+            </button>
+          </div>
+          <div className={styles.paletteLibraryContainer}>Palette Library</div>
+        </div>
       </div>
 
       <div className={styles.mainContent}>
