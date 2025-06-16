@@ -1,9 +1,20 @@
 .appContainer {
   height: 100vh;
   width: 100%;
+  overflow: hidden;
 }
 
-.mainContent {
+.mobileMenu {
+  height: 100vh;
+  width: 0;
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  right: 0;
+  background: white;
+  overflow-x: hidden;
+  transition: 0.15s ease-out;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
 }
 
 /* Large - Landscape Tablets / Desktops */
@@ -14,7 +25,34 @@
   .appContainer {
     max-width: 1200px;
     margin: 0 auto;
-    background-color: blue;
+  }
+
+  .mobileContent {
+    display: none;
+  }
+
+  .mainContent {
+    display: flex;
+  }
+
+  .alphaZone {
+    flex: 1;
+  }
+
+  .betaZone {
+    flex: 1;
+  }
+
+  .colorPickerContainer {
+  }
+
+  .colorValuesContainer {
+  }
+
+  .paletteEditorContainer {
+  }
+
+  .paletteLibraryContainer {
   }
 }
 
@@ -22,7 +60,63 @@
 /* Horizontal layout, side menu, vertical tabbed picker */
 @media (min-width: 568px) and (max-width: 991px) and (orientation: landscape) {
   .appContainer {
-    background-color: yellow;
+  }
+
+  .mainContent,
+  .mobileTopNav {
+    display: none;
+  }
+
+  .mobileContent {
+    display: flex;
+  }
+
+  .mobileLeftNav {
+  }
+
+  .mobileRightNav {
+  }
+
+  .mobileAlphaZone {
+    flex: 1;
+  }
+
+  .mobileBetaZone {
+    flex: 1;
+  }
+
+  .mobileMenu {
+  }
+
+  .mobileMenu.open {
+    width: 80vh;
+  }
+
+  .mobileMenu .closeButton {
+    margin: 10px;
+  }
+
+  .tabbedContainer {
+    max-height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+  }
+
+  .tabbedContainer .tab {
+    height: 100vh;
+    scroll-snap-align: start;
+  }
+
+  .colorPickerContainer {
+  }
+
+  .colorValuesContainer {
+  }
+
+  .paletteEditorContainer {
+  }
+
+  .paletteLibraryContainer {
   }
 }
 
@@ -30,6 +124,62 @@
 /* Vertical layout, side menu, horizontal tabbed picker */
 @media (max-width: 567px) {
   .appContainer {
-    background-color: red;
+  }
+
+  .mainContent,
+  .mobileRightNav,
+  .mobileLeftNav {
+    display: none;
+  }
+
+  .mobileContent {
+  }
+
+  .mobileTopNav {
+    display: flex;
+  }
+
+  .menuButton {
+    margin-left: auto;
+  }
+
+  .mobileAlphaZone {
+  }
+
+  .mobileBetaZone {
+  }
+
+  .mobileMenu {
+  }
+
+  .mobileMenu.open {
+    width: 80%;
+  }
+
+  .mobileMenu .closeButton {
+    margin: 10px;
+  }
+
+  .tabbedContainer {
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+  }
+
+  .tabbedContainer .tab {
+    min-width: 100vw;
+    scroll-snap-align: start;
+  }
+
+  .colorPickerContainer {
+  }
+
+  .colorValuesContainer {
+  }
+
+  .paletteEditorContainer {
+  }
+
+  .paletteLibraryContainer {
   }
 }

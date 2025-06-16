@@ -1,0 +1,16 @@
+/* Large - Landscape Tablets / Desktops */
+/* Medium - Portrait Tablets */
+/* Horizontal layout, vertically scrolling picker and palette content */
+@media (min-width: 992px),
+  (min-width: 568px) and (max-width: 991px) and (orientation: portrait) {
+}
+
+/* Medium - Landscape Phones */
+/* Horizontal layout, side menu, vertical tabbed picker */
+@media (min-width: 568px) and (max-width: 991px) and (orientation: landscape) {
+}
+
+/* Small - Portrait Phones*/
+/* Vertical layout, side menu, horizontal tabbed picker */
+@media (max-width: 567px) {
+}
