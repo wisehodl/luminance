@@ -11,4 +11,7 @@ export default defineConfig({
     wasm(),
     topLevelAwait(),
   ],
+  server: {
+    port: 5173,
+  }
 })

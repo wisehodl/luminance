@@ -2,7 +2,6 @@
   "name": "luminance",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "build": "tsc -b && vite build",
     "build:wasm": "wasm-pack build colorlib -t bundler -d pkg --release",

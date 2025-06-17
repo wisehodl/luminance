@@ -1,10 +1,13 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "lib": ["es5", "dom"],
+    "jsx": "react-jsx",
     "types": ["cypress", "node"],
-    "module": "CommonJS",
-    "moduleResolution": "node"
+    "sourceMap": true,
+    "preserveValueImports": false
   },
-  "include": ["cypress/**/*.ts", "cypress/**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"]
 }

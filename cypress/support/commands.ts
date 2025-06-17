@@ -35,3 +35,32 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add("dataCy", (value: string) => {
+  return cy.get(`[data-cy="${value}"]`);
+});
+
+Cypress.Commands.add("disableTransitions", () => {
+  cy.document().then((document) => {
+    const style = document.createElement("style");
+    style.id = "cypress-disable-transitions";
+    style.innerHTML = `
+      * {
+        transition: none !important;
+        animation: none !important;
+        animation-duration: 0ms !important;
+        transition-duration: 0ms !important;
+      }
+    `;
+    document.head.appendChild(style);
+  });
+});
+
+Cypress.Commands.add("enableTransitions", () => {
+  cy.document().then((document) => {
+    const styleElement = document.getElementById("cypress-disable-transitions");
+    if (styleElement) {
+      styleElement.remove();
+    }
+  });
+});
