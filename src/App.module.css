@@ -4,53 +4,7 @@
   overflow: hidden;
 }
 
-.leftMobileMenu {
-  height: 100vh;
-  width: 0;
-  position: fixed;
-  z-index: 30;
-  top: 0;
-  left: 0;
-  background: white;
-  overflow-x: hidden;
-  transition: 0.5s ease-out;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-}
-
-.leftMenuWrapper {
-  position: absolute;
-  right: 0;
-}
-
-.leftMobileMenu .topNav {
-  display: flex;
-}
-
-.leftMenuWrapper .closeButton {
-  margin: 10px 10px 10px auto;
-}
-
-.rightMobileMenu {
-  height: 100vh;
-  width: 0;
-  position: fixed;
-  z-index: 20;
-  top: 0;
-  right: 0;
-  background: white;
-  overflow-x: hidden;
-  transition: 0.5s ease-out;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-}
-
-.rightMenuWrapper {
-  position: absolute;
-  left: 0;
-}
-
-/* Large - Landscape Tablets / Desktops */
-/* Medium - Portrait Tablets */
-/* Horizontal layout, vertically scrolling picker and palette content */
+/* Large */
 @media (min-width: 992px),
   (min-width: 568px) and (max-width: 991px) and (orientation: portrait) {
   .appContainer {
@@ -87,8 +41,7 @@
   }
 }
 
-/* Medium - Landscape Phones */
-/* Horizontal layout, side menu, vertical tabbed picker */
+/* Landscape Phone */
 @media (min-width: 568px) and (max-width: 991px) and (orientation: landscape) {
   .appContainer {
   }
@@ -116,38 +69,6 @@
     flex: 1;
   }
 
-  .leftMobileMenu {
-  }
-
-  .leftMobileMenu.open {
-    width: 80vh;
-  }
-
-  .leftMenuWrapper {
-    width: 80vh;
-  }
-
-  .leftMobileMenu .topNav {
-  }
-
-  .leftMenuWrapper .closeButton {
-  }
-
-  .rightMobileMenu {
-  }
-
-  .rightMobileMenu.open {
-    width: 80vh;
-  }
-
-  .rightMenuWrapper {
-    width: 80vh;
-  }
-
-  .rightMobileMenu .closeButton {
-    margin: 10px;
-  }
-
   .tabbedContainer {
     max-height: 100vh;
     overflow-y: scroll;
@@ -172,8 +93,7 @@
   }
 }
 
-/* Small - Portrait Phones*/
-/* Vertical layout, side menu, horizontal tabbed picker */
+/* Portrait Phone */
 @media (max-width: 567px) {
   .appContainer {
   }
@@ -203,38 +123,6 @@
   }
 
   .mobileBetaZone {
-  }
-
-  .leftMobileMenu {
-  }
-
-  .leftMobileMenu.open {
-    width: 80%;
-  }
-
-  .leftMenuWrapper {
-    width: 80vw;
-  }
-
-  .leftMobileMenu .topNav {
-  }
-
-  .leftMenuWrapper .closeButton {
-  }
-
-  .rightMobileMenu {
-  }
-
-  .rightMobileMenu.open {
-    width: 80%;
-  }
-
-  .rightMenuWrapper {
-    width: 80vw;
-  }
-
-  .rightMobileMenu .closeButton {
-    margin: 10px;
   }
 
   .tabbedContainer {

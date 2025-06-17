@@ -1,0 +1,88 @@
+.sideMenu {
+  height: 100vh;
+  width: 0;
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  background: white;
+  overflow-x: hidden;
+  transition: 0.3s ease-out;
+}
+
+.sideMenuUnderlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0);
+  transition: background-color 0.3s;
+  pointer-events: none;
+}
+
+.sideMenuUnderlay.open {
+  background: rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+}
+
+.left.sideMenu {
+  left: 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.right.sideMenu {
+  right: 0;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.menuWrapper {
+  position: absolute;
+}
+
+.left.menuWrapper {
+  right: 0;
+}
+
+.right.menuWrapper {
+  left: 0;
+}
+
+.topNav {
+  width: 100%;
+  display: flex;
+}
+
+.right.sideMenu .closeButton {
+  margin: 10px;
+}
+
+.left.sideMenu .closeButton {
+  margin: 10px 10px 10px auto;
+}
+
+/* Landscape Phone */
+@media (min-width: 568px) and (max-width: 991px) and (orientation: landscape) {
+  .left.sideMenu.open,
+  .left.menuWrapper {
+    width: 80vh;
+  }
+
+  .right.sideMenu.open,
+  .right.menuWrapper {
+    width: 80vh;
+  }
+}
+
+/* Portrait Phone */
+@media (max-width: 567px) {
+  .left.sideMenu.open,
+  .left.menuWrapper {
+    width: 80vw;
+  }
+
+  .right.sideMenu.open,
+  .right.menuWrapper {
+    width: 80vw;
+  }
+}
