@@ -87,17 +87,24 @@ function MobileRightNav({ onClick, isOpen }: MenuButtonProps) {
 function MobileFirstZone() {
   return (
     <section className={styles.mobileFirstZone} aria-label="Color tools">
-      <div className={styles.tabWrapper} role="tablist">
+      <div
+        className={styles.tabWrapper}
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Swipe left or right to view different tools"
+      >
         <div
           className={clsx(styles.tab, styles.colorPickerWrapper)}
-          role="tabpanel"
+          role="group"
+          aria-roledescription="slide"
           aria-label="Color Picker"
         >
           <ColorPicker />
         </div>
         <div
           className={clsx(styles.tab, styles.colorValuesWrapper)}
-          role="tabpanel"
+          role="group"
+          aria-roledescription="slide"
           aria-label="Color values"
         >
           <ColorValues />
