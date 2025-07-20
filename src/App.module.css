@@ -1,4 +1,4 @@
-.appContainer {
+.appWrapper {
   height: 100vh;
   width: 100%;
   overflow: hidden;
@@ -20,24 +20,24 @@
     display: flex;
   }
 
-  .alphaZone {
+  .firstZone {
     flex: 1;
   }
 
-  .betaZone {
+  .secondZone {
     flex: 1;
   }
 
-  .colorPickerContainer {
+  .colorPickerWrapper {
   }
 
-  .colorValuesContainer {
+  .colorValuesWrapper {
   }
 
-  .paletteEditorContainer {
+  .paletteEditorWrapper {
   }
 
-  .paletteLibraryContainer {
+  .paletteLibraryWrapper {
   }
 }
 
@@ -61,35 +61,35 @@
   .mobileRightNav {
   }
 
-  .mobileAlphaZone {
+  .mobileFirstZone {
     flex: 1;
   }
 
-  .mobileBetaZone {
+  .mobileSecondZone {
     flex: 1;
   }
 
-  .tabbedContainer {
+  .tabWrapper {
     max-height: 100vh;
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
   }
 
-  .tabbedContainer .tab {
+  .tabWrapper .tab {
     height: 100vh;
     scroll-snap-align: start;
   }
 
-  .colorPickerContainer {
+  .colorPickerWrapper {
   }
 
-  .colorValuesContainer {
+  .colorValuesWrapper {
   }
 
-  .paletteEditorContainer {
+  .paletteEditorWrapper {
   }
 
-  .paletteLibraryContainer {
+  .paletteLibraryWrapper {
   }
 }
 
@@ -119,32 +119,32 @@
     margin-left: auto;
   }
 
-  .mobileAlphaZone {
+  .mobileFirstZone {
   }
 
-  .mobileBetaZone {
+  .mobileSecondZone {
   }
 
-  .tabbedContainer {
+  .tabWrapper {
     display: flex;
     overflow-x: scroll;
     scroll-snap-type: x mandatory;
   }
 
-  .tabbedContainer .tab {
+  .tabWrapper .tab {
     min-width: 100vw;
     scroll-snap-align: start;
   }
 
-  .colorPickerContainer {
+  .colorPickerWrapper {
   }
 
-  .colorValuesContainer {
+  .colorValuesWrapper {
   }
 
-  .paletteEditorContainer {
+  .paletteEditorWrapper {
   }
 
-  .paletteLibraryContainer {
+  .paletteLibraryWrapper {
   }
 }

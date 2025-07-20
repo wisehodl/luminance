@@ -14,6 +14,7 @@ interface BaseMenuProps extends SideMenuProps {
 
 function BaseMenu({ isOpen, onClose, children, position }: BaseMenuProps) {
   const isLeftMenu = position === "left";
+  const menuId = `${position}-side-menu`;
 
   const handleUnderlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -25,8 +26,13 @@ function BaseMenu({ isOpen, onClose, children, position }: BaseMenuProps) {
     <div
       className={clsx(styles.sideMenuUnderlay, { [styles.open]: isOpen })}
       onClick={handleUnderlayClick}
+      aria-hidden={!isOpen}
     >
       <div
+        id={menuId}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${position} side menu`}
         data-cy={`${position}-menu`}
         className={clsx(
           styles.sideMenu,
@@ -43,6 +49,7 @@ function BaseMenu({ isOpen, onClose, children, position }: BaseMenuProps) {
         >
           <div className={styles.topNav}>
             <button
+              aria-label="Close menu"
               data-cy="close-menu"
               className={styles.closeButton}
               onClick={onClose}

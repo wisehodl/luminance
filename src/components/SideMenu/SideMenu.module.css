@@ -9,6 +9,14 @@
   transition: 0.3s ease-out;
 }
 
+.sideMenu:not(.open) {
+  visibility: hidden;
+}
+
+.sideMenu.open {
+  visibility: visible;
+}
+
 .sideMenuUnderlay {
   position: fixed;
   top: 0;
