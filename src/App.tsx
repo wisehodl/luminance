@@ -3,6 +3,7 @@ import styles from "./App.module.css";
 import ColorPicker from "./components/ColorPicker/ColorPicker";
 import ColorValues from "./components/ColorValues/ColorValues";
 import { LeftMenu, RightMenu } from "./components/SideMenu";
+import { useMediaQuery } from "./providers/hooks";
 import clsx from "clsx";
 
 // Menu Button Components
@@ -133,22 +134,29 @@ function MobileContent({
 }: MenuStateProps) {
   const toggleRightMenu = () => setIsRightMenuOpen(!isRightMenuOpen);
   const toggleLeftMenu = () => setIsLeftMenuOpen(!isLeftMenuOpen);
+  const { isMobilePortrait, isMobileLandscape } = useMediaQuery();
 
   return (
     <main className={styles.mobileContent}>
-      <MobileTopNav
-        onLeftMenuClick={toggleLeftMenu}
-        onRightMenuClick={toggleRightMenu}
-        isLeftMenuOpen={isLeftMenuOpen}
-        isRightMenuOpen={isRightMenuOpen}
-      />
+      {isMobilePortrait && (
+        <MobileTopNav
+          onLeftMenuClick={toggleLeftMenu}
+          onRightMenuClick={toggleRightMenu}
+          isLeftMenuOpen={isLeftMenuOpen}
+          isRightMenuOpen={isRightMenuOpen}
+        />
+      )}
 
-      <MobileLeftNav onClick={toggleLeftMenu} isOpen={isLeftMenuOpen} />
+      {isMobileLandscape && (
+        <MobileLeftNav onClick={toggleLeftMenu} isOpen={isLeftMenuOpen} />
+      )}
 
       <MobileFirstZone />
       <MobileSecondZone />
 
-      <MobileRightNav onClick={toggleRightMenu} isOpen={isRightMenuOpen} />
+      {isMobileLandscape && (
+        <MobileRightNav onClick={toggleRightMenu} isOpen={isRightMenuOpen} />
+      )}
 
       <LeftMenu
         isOpen={isLeftMenuOpen}
@@ -220,16 +228,20 @@ function DesktopContent() {
 function App() {
   const [isRightMenuOpen, setIsRightMenuOpen] = useState(false);
   const [isLeftMenuOpen, setIsLeftMenuOpen] = useState(false);
+  const { isDesktop } = useMediaQuery();
 
   return (
     <div className={styles.appWrapper} role="application">
-      <MobileContent
-        isLeftMenuOpen={isLeftMenuOpen}
-        setIsLeftMenuOpen={setIsLeftMenuOpen}
-        isRightMenuOpen={isRightMenuOpen}
-        setIsRightMenuOpen={setIsRightMenuOpen}
-      />
-      <DesktopContent />
+      {!isDesktop && (
+        <MobileContent
+          isLeftMenuOpen={isLeftMenuOpen}
+          setIsLeftMenuOpen={setIsLeftMenuOpen}
+          isRightMenuOpen={isRightMenuOpen}
+          setIsRightMenuOpen={setIsRightMenuOpen}
+        />
+      )}
+
+      {isDesktop && <DesktopContent />}
     </div>
   );
 }
