@@ -11,6 +11,12 @@
   height: 100%;
 }
 
+.tabWrapper {
+  /* hide scrollbar */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Large */
 @media (min-width: 992px),
   (min-width: 568px) and (max-width: 991px) and (orientation: portrait) {
