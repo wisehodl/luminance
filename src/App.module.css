@@ -1,13 +1,20 @@
 .appWrapper {
-  height: 100vh;
+  height: 100%;
   width: 100%;
   overflow: hidden;
+}
+
+.mobileContent,
+.mainContent,
+.tabWrapper,
+.tabWrapper .tab {
+  height: 100%;
 }
 
 /* Large */
 @media (min-width: 992px),
   (min-width: 568px) and (max-width: 991px) and (orientation: portrait) {
-  .appContainer {
+  .appWrapper {
     max-width: 1200px;
     margin: 0 auto;
   }
@@ -43,7 +50,7 @@
 
 /* Landscape Phone */
 @media (min-width: 568px) and (max-width: 991px) and (orientation: landscape) {
-  .appContainer {
+  .appWrapper {
   }
 
   .mainContent,
@@ -70,13 +77,12 @@
   }
 
   .tabWrapper {
-    max-height: 100vh;
+    max-height: 100%;
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
   }
 
   .tabWrapper .tab {
-    height: 100vh;
     scroll-snap-align: start;
   }
 
@@ -95,7 +101,7 @@
 
 /* Portrait Phone */
 @media (max-width: 567px) {
-  .appContainer {
+  .appWrapper {
   }
 
   .mainContent,
