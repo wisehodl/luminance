@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LeftMenu, RightMenu } from "../../src/components/SideMenu";
+import { LeftMenu, RightMenu } from "../SideMenu";
 
 // Test Fixtures
 function newTestApp(position: "left" | "right") {
