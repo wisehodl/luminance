@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { CartesianSpace } from "../types";
 import { minmax } from "../util";
@@ -10,6 +10,22 @@ if (typeof TouchEvent === "undefined") {
 
 function isTouchEvent(event: Event): event is TouchEvent {
   return "touches" in event;
+}
+
+function extractEventCoordinates(event: MouseEvent | TouchEvent): {
+  clientX: number;
+  clientY: number;
+} {
+  if (isTouchEvent(event)) {
+    return {
+      clientX: event.touches[0].clientX,
+      clientY: event.touches[0].clientY,
+    };
+  }
+  return {
+    clientX: event.clientX,
+    clientY: event.clientY,
+  };
 }
 
 export function useCrosshair({
@@ -26,19 +42,6 @@ export function useCrosshair({
   const [isDragging, setIsDragging] = useState(false);
   const crosshairRef = useRef<HTMLDivElement>(null);
 
-  // Construct event handler refs
-  // Prevents unnecessary function recreation
-  const calculatePositionsRef = useRef((_: MouseEvent | TouchEvent) => {});
-  const startCrosshairInteractionRef = useRef(
-    (_: MouseEvent | TouchEvent) => {},
-  );
-  const processCrosshairInteractionRef = useRef(
-    (_: MouseEvent | TouchEvent) => {},
-  );
-  const endCrosshairInteractionRef = useRef((_: MouseEvent | TouchEvent) => {});
-
-  // Store dependencies as refs
-  // Always use latest values
   const originRef = useRef(origin);
   const dimensionsRef = useRef(dimensions);
 
@@ -47,121 +50,92 @@ export function useCrosshair({
     dimensionsRef.current = dimensions;
   }, [origin, dimensions]);
 
-  // Update handler functions when dependencies change via reference
-
-  useEffect(() => {
-    calculatePositionsRef.current = (event: MouseEvent | TouchEvent) => {
+  const calculatePositions = useCallback(
+    (event: MouseEvent | TouchEvent) => {
       const orig = originRef.current;
       const dims = dimensionsRef.current;
 
-      const clientX = isTouchEvent(event)
-        ? event.touches[0].clientX
-        : event.clientX;
-      const clientY = isTouchEvent(event)
-        ? event.touches[0].clientY
-        : event.clientY;
+      const { clientX, clientY } = extractEventCoordinates(event);
 
       const xPos = minmax(clientX - orig.x, 0, dims.x - 1);
       const yPos = minmax(clientY - orig.y, 0, dims.y - 1);
       setXPosition(xPos);
       setYPosition(yPos);
-    };
+    },
+    [setXPosition, setYPosition],
+  );
 
-    startCrosshairInteractionRef.current = (event: MouseEvent | TouchEvent) => {
+  const processCrosshairInteraction = useCallback(
+    (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
-      calculatePositionsRef.current(event);
+      calculatePositions(event);
+    },
+    [calculatePositions],
+  );
+
+  const endCrosshairInteraction = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      setIsDragging(false);
+      if (!isTouchEvent(event)) {
+        document.removeEventListener("mousemove", processCrosshairInteraction);
+        document.removeEventListener("mouseup", endCrosshairInteraction);
+      } else {
+        document.removeEventListener("touchmove", processCrosshairInteraction);
+        document.removeEventListener("touchend", endCrosshairInteraction);
+        document.removeEventListener("touchcancel", endCrosshairInteraction);
+      }
+    },
+    [processCrosshairInteraction],
+  );
+
+  const startCrosshairInteraction = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      event.preventDefault();
+      calculatePositions(event);
       setIsDragging(true);
 
       if (!isTouchEvent(event)) {
-        document.addEventListener(
-          "mousemove",
-          processCrosshairInteractionRef.current,
-        );
-        document.addEventListener(
-          "mouseup",
-          endCrosshairInteractionRef.current,
-          { passive: true },
-        );
+        document.addEventListener("mousemove", processCrosshairInteraction);
+        document.addEventListener("mouseup", endCrosshairInteraction, {
+          passive: true,
+        });
       } else {
-        document.addEventListener(
-          "touchmove",
-          processCrosshairInteractionRef.current,
-        );
-        document.addEventListener(
-          "touchend",
-          endCrosshairInteractionRef.current,
-          { passive: true },
-        );
-        document.addEventListener(
-          "touchcancel",
-          endCrosshairInteractionRef.current,
-          { passive: true },
-        );
+        document.addEventListener("touchmove", processCrosshairInteraction);
+        document.addEventListener("touchend", endCrosshairInteraction, {
+          passive: true,
+        });
+        document.addEventListener("touchcancel", endCrosshairInteraction, {
+          passive: true,
+        });
       }
-    };
+    },
+    [calculatePositions, processCrosshairInteraction, endCrosshairInteraction],
+  );
 
-    processCrosshairInteractionRef.current = (
-      event: MouseEvent | TouchEvent,
-    ) => {
-      event.preventDefault();
-      calculatePositionsRef.current(event);
-    };
-
-    endCrosshairInteractionRef.current = (event: MouseEvent | TouchEvent) => {
-      setIsDragging(false);
-      if (!isTouchEvent(event)) {
-        document.removeEventListener(
-          "mousemove",
-          processCrosshairInteractionRef.current,
-        );
-        document.removeEventListener(
-          "mouseup",
-          endCrosshairInteractionRef.current,
-        );
-      } else {
-        document.removeEventListener(
-          "touchmove",
-          processCrosshairInteractionRef.current,
-        );
-        document.removeEventListener(
-          "touchend",
-          endCrosshairInteractionRef.current,
-        );
-        document.removeEventListener(
-          "touchcancel",
-          endCrosshairInteractionRef.current,
-        );
-      }
-    };
-  }, []);
-
-  // Set up entry listeners
   useEffect(() => {
     const currentRef = crosshairRef.current;
     if (currentRef) {
-      currentRef.addEventListener(
-        "mousedown",
-        startCrosshairInteractionRef.current,
-      );
-      currentRef.addEventListener(
-        "touchstart",
-        startCrosshairInteractionRef.current,
-      );
+      currentRef.addEventListener("mousedown", startCrosshairInteraction);
+      currentRef.addEventListener("touchstart", startCrosshairInteraction);
     }
 
     return () => {
       if (currentRef) {
-        currentRef.removeEventListener(
-          "mousedown",
-          startCrosshairInteractionRef.current,
-        );
-        currentRef.removeEventListener(
-          "touchstart",
-          startCrosshairInteractionRef.current,
-        );
+        currentRef.removeEventListener("mousedown", startCrosshairInteraction);
+        currentRef.removeEventListener("touchstart", startCrosshairInteraction);
       }
+
+      document.removeEventListener("mousemove", processCrosshairInteraction);
+      document.removeEventListener("mouseup", endCrosshairInteraction);
+      document.removeEventListener("touchmove", processCrosshairInteraction);
+      document.removeEventListener("touchend", endCrosshairInteraction);
+      document.removeEventListener("touchcancel", endCrosshairInteraction);
     };
-  }, []);
+  }, [
+    startCrosshairInteraction,
+    processCrosshairInteraction,
+    endCrosshairInteraction,
+  ]);
 
   return { crosshairRef, isDragging };
 }

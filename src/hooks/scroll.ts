@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import type { RefObject } from "react";
 
 export function handleScroll(
@@ -6,7 +6,7 @@ export function handleScroll(
   scrollDelta: number,
   handleIncrement: () => void,
   handleDecrement: () => void,
-) {
+): number {
   const newLength = prevLength + scrollDelta;
 
   if (Math.abs(newLength) > 50) {
@@ -47,42 +47,38 @@ export function useScroll<T extends HTMLElement>({
     deltaYMultiplierRef.current = deltaYMultiplier;
   }, [onScrollUp, onScrollDown, deltaYMultiplier]);
 
-  const handleWheelEventRef = useRef((_: WheelEvent) => {});
+  const handleWheelEvent = useCallback((event: WheelEvent) => {
+    event.preventDefault();
 
-  useEffect(() => {
-    handleWheelEventRef.current = (event: WheelEvent) => {
-      event.preventDefault();
-
-      setScrollLength((prev) =>
-        handleScroll(
-          prev,
-          event.deltaY * deltaYMultiplierRef.current,
-          onScrollDownRef.current,
-          onScrollUpRef.current,
-        ),
-      );
-    };
+    setScrollLength((prev) =>
+      handleScroll(
+        prev,
+        event.deltaY * deltaYMultiplierRef.current,
+        onScrollDownRef.current,
+        onScrollUpRef.current,
+      ),
+    );
   }, []);
 
-  function addScrollListener() {
+  const addScrollListener = useCallback(() => {
     const currentRef = targetRef.current;
     if (currentRef) {
-      currentRef.addEventListener("wheel", handleWheelEventRef.current);
+      currentRef.addEventListener("wheel", handleWheelEvent);
     }
-  }
+  }, [handleWheelEvent, targetRef]);
 
-  function removeScrollListener() {
+  const removeScrollListener = useCallback(() => {
     const currentRef = targetRef.current;
     if (currentRef) {
-      currentRef.removeEventListener("wheel", handleWheelEventRef.current);
+      currentRef.removeEventListener("wheel", handleWheelEvent);
     }
-  }
+  }, [handleWheelEvent, targetRef]);
 
   useEffect(() => {
     return () => {
       removeScrollListener();
     };
-  }, []);
+  }, [removeScrollListener]);
 
   return {
     addScrollListener,
