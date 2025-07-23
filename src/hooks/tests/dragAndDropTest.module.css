@@ -1,0 +1,43 @@
+.wrapper {
+}
+
+.itemsWrapper {
+}
+
+.draggableItem {
+  display: flex;
+  width: 200px;
+  height: 50px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.draggableItem .content {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.draggableItem .handle {
+  width: 15px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  margin-right: 10px;
+  cursor: grab;
+}
+
+.dragging {
+  opacity: 0.8;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.controls {
+  display: flex;
+  gap: 25px;
+}
+
+.status {
+}
+
+.currentOrder {
+}
