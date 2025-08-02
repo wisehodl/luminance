@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import { useSlider, Direction } from "../slider";
+import { useEffect, useRef, useState } from "react";
+
 import type { CartesianSpace } from "../../types";
+import { Direction, useSlider } from "../slider";
 
 // Test Fixtures
 
@@ -111,6 +112,7 @@ function createTestUtils(isHorizontal = true) {
     cy.dataCy("slider-container").trigger(eventType, {
       clientX: x,
       clientY: y,
+      buttons: 1,
       eventConstructor: "MouseEvent",
     });
   };
@@ -176,28 +178,24 @@ describe("horizontal slider hook tests", () => {
     assertPosition(164);
   });
 
-  if (isTouchSupported()) {
-    it("moves the slider with touch events.", () => {
-      assertPosition(0);
+  it("moves the slider with touch events.", () => {
+    assertPosition(0);
 
-      triggerTouchEvent("touchstart", 86, 53);
-      assertPosition(0);
+    triggerTouchEvent("touchstart", 86, 53);
+    assertPosition(0);
 
-      triggerTouchEvent("touchmove", 150, 150);
-      assertPosition(64);
+    triggerTouchEvent("touchmove", 150, 150);
+    assertPosition(64);
 
-      triggerTouchEvent("touchmove", 500, 500);
-      assertPosition(250);
+    triggerTouchEvent("touchmove", 500, 500);
+    assertPosition(250);
 
-      triggerTouchEvent("touchmove", 250, 250);
-      assertPosition(164);
+    triggerTouchEvent("touchmove", 250, 250);
+    assertPosition(164);
 
-      triggerTouchEvent("touchend", 250, 250);
-      assertPosition(164);
-    });
-  } else {
-    console.log("Skipping Unsupported Touch Event Tests");
-  }
+    triggerTouchEvent("touchend", 250, 250);
+    assertPosition(164);
+  });
 
   it("moves the slider with mouse wheel scrolling", () => {
     assertPosition(0);
@@ -256,28 +254,24 @@ describe("vertical slider hook tests", () => {
     assertPosition(172);
   });
 
-  if (isTouchSupported()) {
-    it("moves the slider with touch events.", () => {
-      assertPosition(0);
+  it("moves the slider with touch events.", () => {
+    assertPosition(0);
 
-      triggerTouchEvent("touchstart", 86, 53);
-      assertPosition(0);
+    triggerTouchEvent("touchstart", 86, 53);
+    assertPosition(0);
 
-      triggerTouchEvent("touchmove", 150, 150);
-      assertPosition(72);
+    triggerTouchEvent("touchmove", 150, 150);
+    assertPosition(72);
 
-      triggerTouchEvent("touchmove", 500, 500);
-      assertPosition(250);
+    triggerTouchEvent("touchmove", 500, 500);
+    assertPosition(250);
 
-      triggerTouchEvent("touchmove", 250, 250);
-      assertPosition(172);
+    triggerTouchEvent("touchmove", 250, 250);
+    assertPosition(172);
 
-      triggerTouchEvent("touchend", 250, 250);
-      assertPosition(172);
-    });
-  } else {
-    console.log("Skipping Unsupported Touch Event Tests");
-  }
+    triggerTouchEvent("touchend", 250, 250);
+    assertPosition(172);
+  });
 
   it("moves the slider with mouse wheel scrolling", () => {
     assertPosition(0);

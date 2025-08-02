@@ -118,6 +118,7 @@ const triggerMouseEvent = (eventType: string, x: number, y: number) => {
   cy.dataCy("crosshair-container").trigger(eventType, {
     clientX: x,
     clientY: y,
+    buttons: 1,
     eventConstructor: "MouseEvent",
   });
 };

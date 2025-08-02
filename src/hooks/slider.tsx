@@ -15,10 +15,6 @@ if (typeof TouchEvent === "undefined") {
   window.TouchEvent = window.MouseEvent;
 }
 
-function isTouchEvent(event: Event): event is TouchEvent {
-  return "touches" in event;
-}
-
 export enum Direction {
   HORIZONTAL = "horizontal",
   VERTICAL = "vertical",
@@ -32,18 +28,12 @@ function chooseValueByDirection(
   return direction === Direction.HORIZONTAL ? xValue : yValue;
 }
 
-function extractEventCoordinate(
+function extractEventCoordinateByDirection(
   event: MouseEvent | TouchEvent,
   direction: Direction,
 ): number {
-  if (isTouchEvent(event)) {
-    return chooseValueByDirection(
-      direction,
-      event.touches[0].clientX,
-      event.touches[0].clientY,
-    );
-  }
-  return chooseValueByDirection(direction, event.clientX, event.clientY);
+  const { clientX, clientY } = extractEventCoordinates(event);
+  return chooseValueByDirection(direction, clientX, clientY);
 }
 
 export function useSlider({
@@ -77,7 +67,7 @@ export function useSlider({
       const orig = originRef.current;
       const dims = dimensionsRef.current;
 
-      const clientCoord = extractEventCoordinate(event, dir);
+      const clientCoord = extractEventCoordinateByDirection(event, dir);
       const positionValue = minmax(
         clientCoord - chooseValueByDirection(dir, orig.x, orig.y),
         0,
@@ -88,7 +78,7 @@ export function useSlider({
     [setPosition],
   );
 
-  const processSliderInteraction = useCallback(
+  const handleMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
       calculatePosition(event);
@@ -96,43 +86,34 @@ export function useSlider({
     [calculatePosition],
   );
 
-  const endSliderInteraction = useCallback(
+  const handleEnd = useCallback(
     (event: MouseEvent | TouchEvent) => {
+      document.removeEventListener("mousemove", handleMove);
+      document.removeEventListener("mouseup", handleEnd);
+      document.removeEventListener("touchmove", handleMove);
+      document.removeEventListener("touchend", handleEnd);
+      document.removeEventListener("touchcancel", handleEnd);
       setIsDragging(false);
-      if (!isTouchEvent(event)) {
-        document.removeEventListener("mousemove", processSliderInteraction);
-        document.removeEventListener("mouseup", endSliderInteraction);
-      } else {
-        document.removeEventListener("touchmove", processSliderInteraction);
-        document.removeEventListener("touchend", endSliderInteraction);
-        document.removeEventListener("touchcancel", endSliderInteraction);
-      }
     },
-    [processSliderInteraction],
+    [handleMove],
   );
 
-  const startSliderInteraction = useCallback(
+  const handleStart = useCallback(
     (event: MouseEvent | TouchEvent) => {
+      if (!isTouchEvent(event) && !isLeftMouseButton(event.buttons)) {
+        return;
+      }
       event.preventDefault();
       calculatePosition(event);
       setIsDragging(true);
 
-      if (!isTouchEvent(event)) {
-        document.addEventListener("mousemove", processSliderInteraction);
-        document.addEventListener("mouseup", endSliderInteraction, {
-          passive: true,
-        });
-      } else {
-        document.addEventListener("touchmove", processSliderInteraction);
-        document.addEventListener("touchend", endSliderInteraction, {
-          passive: true,
-        });
-        document.addEventListener("touchcancel", endSliderInteraction, {
-          passive: true,
-        });
-      }
+      document.addEventListener("mousemove", handleMove);
+      document.addEventListener("mouseup", handleEnd, { passive: true });
+      document.addEventListener("touchmove", handleMove);
+      document.addEventListener("touchend", handleEnd, { passive: true });
+      document.addEventListener("touchcancel", handleEnd, { passive: true });
     },
-    [calculatePosition, processSliderInteraction, endSliderInteraction],
+    [calculatePosition, handleMove, handleEnd],
   );
 
   // Setup scroll handlers
@@ -165,29 +146,29 @@ export function useSlider({
     const currentRef = sliderRef.current;
     if (currentRef) {
       addScrollListener();
-      currentRef.addEventListener("mousedown", startSliderInteraction);
-      currentRef.addEventListener("touchstart", startSliderInteraction);
+      currentRef.addEventListener("mousedown", handleStart);
+      currentRef.addEventListener("touchstart", handleStart);
     }
 
     return () => {
       if (currentRef) {
         removeScrollListener();
-        currentRef.removeEventListener("mousedown", startSliderInteraction);
-        currentRef.removeEventListener("touchstart", startSliderInteraction);
+        currentRef.removeEventListener("mousedown", handleStart);
+        currentRef.removeEventListener("touchstart", handleStart);
       }
 
-      document.removeEventListener("mousemove", processSliderInteraction);
-      document.removeEventListener("mouseup", endSliderInteraction);
-      document.removeEventListener("touchmove", processSliderInteraction);
-      document.removeEventListener("touchend", endSliderInteraction);
-      document.removeEventListener("touchcancel", endSliderInteraction);
+      document.removeEventListener("mousemove", handleMove);
+      document.removeEventListener("mouseup", handleEnd);
+      document.removeEventListener("touchmove", handleMove);
+      document.removeEventListener("touchend", handleEnd);
+      document.removeEventListener("touchcancel", handleEnd);
     };
   }, [
     addScrollListener,
     removeScrollListener,
-    startSliderInteraction,
-    processSliderInteraction,
-    endSliderInteraction,
+    handleStart,
+    handleMove,
+    handleEnd,
   ]);
 
   return { sliderRef, isDragging };
