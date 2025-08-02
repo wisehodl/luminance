@@ -7,6 +7,8 @@
     "build:wasm": "wasm-pack build colorlib -t bundler -d pkg --release",
     "clean": "rm -rf dist colorlib/pkg*",
     "cypress:open": "1>/dev/null 2>/dev/null cypress open -d &",
+    "cypress:component": "cypress run --component",
+    "cypress:e2e": "cypress run --e2e",
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview",

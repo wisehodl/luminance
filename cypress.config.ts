@@ -1,9 +1,12 @@
 import { defineConfig } from "cypress";
 import vitePreprocessor from "cypress-vite";
+import { mergeConfig } from "vite";
+
+import viteConfig from "./vite.config";
 
 export default defineConfig({
   e2e: {
-    setupNodeEvents(on, config) {
+    setupNodeEvents(on, _) {
       on("file:preprocessor", vitePreprocessor());
     },
     baseUrl: "http://localhost:5173",
@@ -13,10 +16,12 @@ export default defineConfig({
     devServer: {
       framework: "react",
       bundler: "vite",
-      viteConfig: {
-        server: {
-          port: 5174,
-        },
+      viteConfig: () => {
+        return mergeConfig(viteConfig, {
+          server: {
+            port: 5174,
+          },
+        });
       },
     },
   },
