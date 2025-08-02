@@ -5,7 +5,7 @@ import {
   extractEventCoordinates,
   isLeftMouseButton,
   isTouchEvent,
-} from "../util";
+} from "@/util";
 
 type DragAction<T> =
   | { type: "resetItems"; items: T[] }

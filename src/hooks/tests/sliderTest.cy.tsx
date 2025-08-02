@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-import type { CartesianSpace } from "../../types";
+import type { CartesianSpace } from "@/types";
+
 import { Direction, useSlider } from "../slider";
 
 // Test Fixtures

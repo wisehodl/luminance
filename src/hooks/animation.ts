@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useCallback, useRef } from "react";
 
 export function useSmoothAnimation() {
   const animationRef = useRef<number | null>(null);

@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 
-import type { CartesianSpace } from "../types";
+import type { CartesianSpace } from "@/types";
 import {
   extractEventCoordinates,
   isLeftMouseButton,
   isTouchEvent,
   minmax,
-} from "../util";
+} from "@/util";
 
 if (typeof TouchEvent === "undefined") {
   // @ts-ignore - intentionally creating global

@@ -1,4 +1,5 @@
 import { useContext } from "react";
+
 import { MediaQueryContext } from "./MediaQueryProvider";
 
 function useMediaQuery() {
