@@ -1,10 +1,11 @@
+import clsx from "clsx";
 import { useState } from "react";
+
 import styles from "./App.module.css";
 import ColorPicker from "./components/ColorPicker/ColorPicker";
 import ColorValues from "./components/ColorValues/ColorValues";
 import { LeftMenu, RightMenu } from "./components/SideMenu";
 import { useMediaQuery } from "./providers/hooks";
-import clsx from "clsx";
 
 // Menu Button Components
 

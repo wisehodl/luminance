@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import { useCrosshair } from "../crosshair";
+import { useEffect, useRef, useState } from "react";
+
 import type { CartesianSpace } from "../../types";
+import { useCrosshair } from "../crosshair";
 
 // Test Fixtures
 

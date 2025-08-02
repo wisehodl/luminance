@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
 import clsx from "clsx";
+import type { ReactNode } from "react";
+
 import styles from "./SideMenu.module.css";
 
 interface SideMenuProps {

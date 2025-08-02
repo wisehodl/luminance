@@ -1,7 +1,13 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { minmax } from "../util";
+
 import type { CartesianSpace } from "../types";
+import {
+  extractEventCoordinates,
+  isLeftMouseButton,
+  isTouchEvent,
+  minmax,
+} from "../util";
 import { useScroll } from "./scroll";
 
 if (typeof TouchEvent === "undefined") {
