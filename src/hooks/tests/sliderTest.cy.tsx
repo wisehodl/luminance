@@ -142,10 +142,6 @@ function createTestUtils(isHorizontal = true) {
   };
 }
 
-const isTouchSupported = () => {
-  return typeof TouchEvent !== "undefined";
-};
-
 // Tests
 
 describe("horizontal slider hook tests", () => {
@@ -201,25 +197,25 @@ describe("horizontal slider hook tests", () => {
   it("moves the slider with mouse wheel scrolling", () => {
     assertPosition(0);
 
-    triggerWheelEvent(100);
-    assertPosition(1);
-
-    triggerWheelEvent(100);
-    assertPosition(2);
-
     triggerWheelEvent(-100);
     assertPosition(1);
 
+    triggerWheelEvent(-100);
+    assertPosition(2);
+
+    triggerWheelEvent(100);
+    assertPosition(1);
+
     // Many smaller scrolls, to simulate touchpads
-    triggerWheelEvent(20);
-    triggerWheelEvent(20);
-    triggerWheelEvent(20);
-    triggerWheelEvent(20);
-    triggerWheelEvent(20);
-    triggerWheelEvent(20);
-    triggerWheelEvent(20);
-    triggerWheelEvent(20);
-    triggerWheelEvent(20);
+    triggerWheelEvent(-20);
+    triggerWheelEvent(-20);
+    triggerWheelEvent(-20);
+    triggerWheelEvent(-20);
+    triggerWheelEvent(-20);
+    triggerWheelEvent(-20);
+    triggerWheelEvent(-20);
+    triggerWheelEvent(-20);
+    triggerWheelEvent(-20);
     assertPosition(4);
   });
 });

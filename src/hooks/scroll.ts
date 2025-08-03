@@ -49,6 +49,7 @@ export function useScroll<T extends HTMLElement>({
 
   const handleWheelEvent = useCallback((event: WheelEvent) => {
     event.preventDefault();
+    console.log("Handling wheel event.");
 
     setScrollLength((prev) =>
       handleScroll(

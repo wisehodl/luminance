@@ -87,17 +87,14 @@ export function useSlider({
     [calculatePosition],
   );
 
-  const handleEnd = useCallback(
-    (event: MouseEvent | TouchEvent) => {
-      document.removeEventListener("mousemove", handleMove);
-      document.removeEventListener("mouseup", handleEnd);
-      document.removeEventListener("touchmove", handleMove);
-      document.removeEventListener("touchend", handleEnd);
-      document.removeEventListener("touchcancel", handleEnd);
-      setIsDragging(false);
-    },
-    [handleMove],
-  );
+  const handleEnd = useCallback(() => {
+    document.removeEventListener("mousemove", handleMove);
+    document.removeEventListener("mouseup", handleEnd);
+    document.removeEventListener("touchmove", handleMove);
+    document.removeEventListener("touchend", handleEnd);
+    document.removeEventListener("touchcancel", handleEnd);
+    setIsDragging(false);
+  }, [handleMove]);
 
   const handleStart = useCallback(
     (event: MouseEvent | TouchEvent) => {
@@ -121,18 +118,20 @@ export function useSlider({
   const handleScrollUp = useCallback(() => {
     const dir = directionRef.current;
     const dims = dimensionsRef.current;
+    const inc = chooseValueByDirection(dir, 1, -1);
 
     setPosition((prev: number) =>
-      minmax(prev - 1, 0, chooseValueByDirection(dir, dims.x, dims.y)),
+      minmax(prev + inc, 0, chooseValueByDirection(dir, dims.x, dims.y)),
     );
   }, [setPosition]);
 
   const handleScrollDown = useCallback(() => {
     const dir = directionRef.current;
     const dims = dimensionsRef.current;
+    const inc = chooseValueByDirection(dir, -1, 1);
 
     setPosition((prev: number) =>
-      minmax(prev + 1, 0, chooseValueByDirection(dir, dims.x, dims.y)),
+      minmax(prev + inc, 0, chooseValueByDirection(dir, dims.x, dims.y)),
     );
   }, [setPosition]);
 
