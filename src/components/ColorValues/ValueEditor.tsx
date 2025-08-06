@@ -1,91 +1,62 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ChangeEvent, Dispatch, RefObject, SetStateAction } from "react";
+import type { ChangeEvent, RefObject } from "react";
 
 import clsx from "clsx";
 
-import type { CartesianSpace } from "@/types";
-import { minmax, setMeasurements } from "@/util";
+import type { CartesianSpace, Range, Setter, Timeout } from "@/types";
+import { Direction } from "@/types";
+import { minmax, setMeasurements, valueToPosition } from "@/util";
 import { useScroll } from "@hooks/scroll";
-import { Direction, useSlider } from "@hooks/slider";
+import { useSlider } from "@hooks/slider";
 import { useResize } from "@hooks/window";
 
 import styles from "./ValueEditor.module.css";
 
-// Types
-type Timeout = ReturnType<typeof setTimeout>;
-interface Range {
-  min: number;
-  max: number;
-}
-
-// Calculation functions
-const getPositionFromValue = (
-  newValue: number,
-  maxValue: number,
-  range: Range,
-) => {
-  const newPosition = parseFloat(
-    (
-      ((newValue + Math.abs(range.min)) /
-        (Math.abs(range.min) + Math.abs(range.max))) *
-      maxValue
-    ).toFixed(0),
-  );
-  return newPosition;
-};
-
-const getValueFromPosition = (
-  newPosition: number,
-  maxValue: number,
-  range: Range,
-) => {
-  const newValue = parseFloat(
-    (
-      (newPosition / maxValue) * (Math.abs(range.min) + Math.abs(range.max)) -
-      Math.abs(range.min)
-    ).toFixed(0),
-  );
-  return newValue;
-};
-
 // Component
 function ValueEditor({
   componentSymbol,
-  range,
+  valueRange,
   value,
   setValue,
+  scale = 1,
 }: {
   componentSymbol: string;
-  range: Range;
+  valueRange: Range;
   value: number;
-  setValue: Dispatch<SetStateAction<number>>;
+  setValue: Setter<number>;
+  scale?: number;
 }) {
   // Set up component state
   const direction = Direction.HORIZONTAL;
   const [origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
-  const [position, setPosition] = useState(0);
+  const position = useRef(0);
+
+  useEffect(() => {
+    position.current = valueToPosition(value, dimensions.x, valueRange);
+  }, [value, dimensions, valueRange]);
 
   // Handler functions
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = parseInt(e.target.value, 10);
     if (!isNaN(inputValue)) {
-      const newValue = minmax(inputValue, range.min, range.max);
-      const newPosition = getPositionFromValue(newValue, dimensions.x, range);
+      const actualValue = inputValue / scale;
+      const newValue = minmax(actualValue, valueRange.min, valueRange.max);
 
       setValue(newValue);
-      setPosition(newPosition);
     } else {
-      setValue(range.min);
-      setPosition(0);
+      setValue(valueRange.min);
     }
   };
 
   const handleValueStep = (step: number) => {
     setValue((prev) => {
-      const newValue = minmax(prev + step, range.min, range.max);
-      const newPosition = getPositionFromValue(newValue, dimensions.x, range);
-      setPosition(newPosition);
+      const scaledStep = step / scale;
+      const newValue = minmax(
+        prev + scaledStep,
+        valueRange.min,
+        valueRange.max,
+      );
       return newValue;
     });
   };
@@ -95,7 +66,9 @@ function ValueEditor({
     direction,
     origin,
     dimensions,
-    setPosition,
+    valueRange,
+    value,
+    setValue,
   });
 
   // Set component dimensions for slider hook
@@ -105,17 +78,6 @@ function ValueEditor({
       setMeasurements(sliderRef, setOrigin, setDimensions),
     );
   }, [sliderRef, setOrigin, setDimensions]);
-
-  // Update value when position, etc. changes
-  useEffect(() => {
-    const maxValue = dimensions.x;
-    if (maxValue > 0) {
-      const newValue = getValueFromPosition(position, maxValue, range);
-      setValue(newValue);
-    } else {
-      setValue(range.min);
-    }
-  }, [dimensions, position, range, setValue]);
 
   return (
     <div
@@ -128,9 +90,8 @@ function ValueEditor({
 
       <Slider
         sliderRef={sliderRef}
-        position={position}
-        value={value}
-        range={range}
+        position={position.current}
+        dimensions={dimensions}
         componentSymbol={componentSymbol}
       />
 
@@ -143,9 +104,10 @@ function ValueEditor({
       <Value
         value={value}
         onChange={handleInputChange}
-        range={range}
+        valueRange={valueRange}
         componentSymbol={componentSymbol}
         handleValueStep={handleValueStep}
+        scale={scale}
       />
 
       <Button
@@ -173,33 +135,33 @@ function Label({ componentSymbol }: { componentSymbol: string }) {
 function Slider({
   sliderRef,
   position,
-  value,
-  range,
+  dimensions,
   componentSymbol,
 }: {
   sliderRef: RefObject<HTMLDivElement | null>;
   position: number;
-  value: number;
-  range: { min: number; max: number };
+  dimensions: CartesianSpace;
   componentSymbol: string;
 }) {
   return (
-    <div
-      className={clsx(styles.section, styles.sliderWrapper)}
-      ref={sliderRef}
-      role="slider"
-      aria-valuemin={range.min}
-      aria-valuemax={range.max}
-      aria-valuenow={value}
-      aria-labelledby={`${componentSymbol}-label`}
-      tabIndex={0}
-      data-cy={`${componentSymbol}-slider`}
-    >
+    <div className={clsx(styles.section, styles.sliderSection)}>
       <div
-        className={styles.sliderBar}
-        style={{ width: position }}
-        data-cy={`${componentSymbol}-slider-bar`}
-      ></div>
+        className={styles.sliderWrapper}
+        ref={sliderRef}
+        role="slider"
+        aria-valuemin={0}
+        aria-valuemax={dimensions.x}
+        aria-valuenow={position}
+        aria-labelledby={`${componentSymbol}-label`}
+        tabIndex={0}
+        data-cy={`${componentSymbol}-slider`}
+      >
+        <div
+          className={styles.sliderBar}
+          style={{ width: position }}
+          data-cy={`${componentSymbol}-slider-bar`}
+        ></div>
+      </div>
     </div>
   );
 }
@@ -240,15 +202,17 @@ function Button({
 function Value({
   value,
   onChange,
-  range,
+  valueRange,
   componentSymbol,
   handleValueStep,
+  scale,
 }: {
   value: number;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  range: { min: number; max: number };
+  valueRange: { min: number; max: number };
   componentSymbol: string;
   handleValueStep: (step: number) => void;
+  scale: number;
 }) {
   const valueRef = useRef(null);
   const valueScroller = useScroll({
@@ -263,9 +227,7 @@ function Value({
     }
 
     return () => {
-      if (valueRef.current) {
-        valueScroller.removeScrollListener();
-      }
+      valueScroller.removeScrollListener();
     };
   }, [valueScroller]);
 
@@ -274,13 +236,13 @@ function Value({
       <input
         type="text"
         ref={valueRef}
-        value={value}
+        value={Math.round(value * scale)}
         onChange={onChange}
         className={styles.value}
         onFocus={(e) => e.target.select()}
         aria-label={`${componentSymbol} value input`}
-        aria-valuemin={range.min}
-        aria-valuemax={range.max}
+        aria-valuemin={valueRange.min}
+        aria-valuemax={valueRange.max}
         aria-valuenow={value}
         data-cy={`${componentSymbol}-value-input`}
       />
@@ -294,35 +256,30 @@ function useLongPressRepeat(
   startDelay = 650,
   repeatInterval = 150,
 ) {
-  const [pressing, setPressing] = useState(false);
-  const timerRef = useRef<Timeout>(null);
+  const timeoutRef = useRef<Timeout>(null);
   const intervalRef = useRef<Timeout>(null);
 
-  const start = useCallback(
-    (e: Event | any) => {
-      e.preventDefault();
-      setPressing(true);
-      timerRef.current = setTimeout(() => {
-        callback();
-        intervalRef.current = setInterval(callback, repeatInterval);
-      }, startDelay);
-    },
-    [callback, startDelay, repeatInterval],
-  );
-
-  const stop = useCallback(() => {
-    setPressing(false);
-
-    if (timerRef.current) clearTimeout(timerRef.current);
+  const cleanup = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (intervalRef.current) clearInterval(intervalRef.current);
-  }, []);
+    timeoutRef.current = null;
+    intervalRef.current = null;
+  };
 
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
+  // Intentional 'any' to avoid overly complex typing
+  const start = (e: Event | any) => {
+    e.preventDefault();
+    cleanup();
+
+    timeoutRef.current = setTimeout(() => {
+      callback();
+      intervalRef.current = setInterval(callback, repeatInterval);
+    }, startDelay);
+  };
+
+  const stop = cleanup;
+
+  useEffect(() => cleanup, []);
 
   return {
     onMouseDown: start,
@@ -330,8 +287,8 @@ function useLongPressRepeat(
     onMouseLeave: stop,
     onTouchStart: start,
     onTouchEnd: stop,
+    // Intentional 'any' to avoid overly complex typing
     onContextMenu: (e: Event | any) => e.preventDefault(),
-    pressing: pressing.toString(),
   };
 }
 

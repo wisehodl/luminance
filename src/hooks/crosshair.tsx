@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Dispatch, SetStateAction } from "react";
 
-import type { CartesianSpace } from "@/types";
+import type { CartesianSpace, Range, Setter } from "@/types";
 import {
   extractEventCoordinates,
   isLeftMouseButton,
   isTouchEvent,
   minmax,
+  positionToValue,
+  valueToPosition,
 } from "@/util";
 
 if (typeof TouchEvent === "undefined") {
@@ -19,37 +20,57 @@ export function useCrosshair({
   dimensions,
   setXPosition,
   setYPosition,
+  xValue,
+  yValue,
+  setXValue,
+  setYValue,
+  xValueRange,
+  yValueRange,
 }: {
   origin: CartesianSpace;
   dimensions: CartesianSpace;
-  setXPosition: Dispatch<SetStateAction<number>>;
-  setYPosition: Dispatch<SetStateAction<number>>;
+  setXPosition: Setter<number>;
+  setYPosition: Setter<number>;
+  xValue: number;
+  yValue: number;
+  setXValue: Setter<number>;
+  setYValue: Setter<number>;
+  xValueRange: Range;
+  yValueRange: Range;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   const crosshairRef = useRef<HTMLDivElement>(null);
 
   const originRef = useRef(origin);
   const dimensionsRef = useRef(dimensions);
+  const setXValueRef = useRef(setXValue);
+  const setYValueRef = useRef(setYValue);
+  const xValueRangeRef = useRef(xValueRange);
+  const yValueRangeRef = useRef(yValueRange);
 
   useEffect(() => {
     originRef.current = origin;
     dimensionsRef.current = dimensions;
-  }, [origin, dimensions]);
+    setXValueRef.current = setXValue;
+    setYValueRef.current = setYValue;
+    xValueRangeRef.current = xValueRange;
+    yValueRangeRef.current = yValueRange;
+  }, [origin, dimensions, setXValue, setYValue, xValueRange, yValueRange]);
 
-  const calculatePositions = useCallback(
-    (event: MouseEvent | TouchEvent) => {
-      const orig = originRef.current;
-      const dims = dimensionsRef.current;
+  const calculatePositions = useCallback((event: MouseEvent | TouchEvent) => {
+    const orig = originRef.current;
+    const dims = dimensionsRef.current;
 
-      const { clientX, clientY } = extractEventCoordinates(event);
+    const { clientX, clientY } = extractEventCoordinates(event);
 
-      const xPos = minmax(clientX - orig.x, 0, dims.x - 1);
-      const yPos = minmax(clientY - orig.y, 0, dims.y - 1);
-      setXPosition(xPos);
-      setYPosition(yPos);
-    },
-    [setXPosition, setYPosition],
-  );
+    const xPos = minmax(clientX - orig.x, 0, dims.x - 1);
+    const yPos = minmax(clientY - orig.y, 0, dims.y - 1);
+    const newXValue = positionToValue(xPos, dims.x - 1, xValueRangeRef.current);
+    const newYValue = positionToValue(yPos, dims.y - 1, yValueRangeRef.current);
+
+    setXValueRef.current(newXValue);
+    setYValueRef.current(newYValue);
+  }, []);
 
   const handleMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
@@ -100,6 +121,15 @@ export function useCrosshair({
     },
     [calculatePositions, handleMove, handleEnd],
   );
+
+  useEffect(() => {
+    const dims = dimensionsRef.current;
+    const newXPos = valueToPosition(xValue, dims.x - 1, xValueRangeRef.current);
+    const newYPos = valueToPosition(yValue, dims.y - 1, yValueRangeRef.current);
+
+    if (newXPos === newXPos) setXPosition(newXPos);
+    if (newYPos === newYPos) setYPosition(newYPos);
+  }, [xValue, yValue, setXPosition, setYPosition]);
 
   useEffect(() => {
     const currentRef = crosshairRef.current;

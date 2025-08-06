@@ -11,12 +11,22 @@ function TestSquare() {
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [xPosition, setXPosition] = useState(0);
   const [yPosition, setYPosition] = useState(0);
+  const [xValue, setXValue] = useState(0);
+  const [yValue, setYValue] = useState(0);
+  const xValueRange = { min: 0, max: 100 };
+  const yValueRange = { min: 0, max: 100 };
 
   const { crosshairRef, isDragging } = useCrosshair({
     origin,
     dimensions,
     setXPosition,
     setYPosition,
+    xValue,
+    yValue,
+    setXValue,
+    setYValue,
+    xValueRange,
+    yValueRange,
   });
 
   const boundaryRef = useRef<HTMLDivElement>(null);
@@ -97,6 +107,10 @@ function TestSquare() {
         <span data-cy="is-dragging-display">
           {isDragging ? "True" : "False"}
         </span>
+      </p>
+      <p>
+        X Value: <span data-cy="x-value-display">{xValue}</span>
+        <br />Y Value: <span data-cy="y-value-display">{yValue}</span>
       </p>
     </>
   );

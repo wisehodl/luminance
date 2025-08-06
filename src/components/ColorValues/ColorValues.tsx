@@ -1,13 +1,10 @@
-import styles from "./ColorValues.module.css";
+import * as colorlib from "colorlib";
 
-function ColorValues() {
-  return (
-    <div className={styles.container}>
-      <div className={styles.valueItem}>RGB: 255, 0, 0</div>
-      <div className={styles.valueItem}>HEX: #FF0000</div>
-      <div className={styles.valueItem}>HSL: 0, 100%, 50%</div>
-    </div>
-  );
+import styles from "./ColorValues.module.css";
+import SpaceEditor from "./SpaceEditor";
+
+function ColorValues({ selectedColor }: { selectedColor: colorlib.Color }) {
+  return <div className={styles.wrapper}></div>;
 }
 
 export default ColorValues;

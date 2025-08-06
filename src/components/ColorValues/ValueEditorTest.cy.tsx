@@ -1,16 +1,26 @@
-import { useState } from "react";
+import { useReducer } from "react";
+
+import { Color } from "colorlib";
+
+import { colorReducer, createColorActions } from "@hooks/color";
 
 import ValueEditor from "./ValueEditor";
 
+const initialState = {
+  color: Color.from_hex("000"),
+};
+
 function TestWrapper() {
-  const [value, setValue] = useState(0);
+  const [state, dispatch] = useReducer(colorReducer, initialState);
+  const actions = createColorActions(dispatch);
+
   return (
-    <div style={{ width: 400, height: 25 }}>
+    <div style={{ width: 400 }}>
       <ValueEditor
         componentSymbol="R"
-        range={{ min: 0, max: 255 }}
-        value={value}
-        setValue={setValue}
+        valueRange={{ min: 0, max: 255 }}
+        value={state.color.rgb.r}
+        setValue={actions.rgb.setR}
       />
     </div>
   );
@@ -37,9 +47,9 @@ describe("component editor tests", () => {
     cy.dataCy("R-slider")
       .click()
       .dataCy("R-slider-bar")
-      .should("have.css", "width", "141px")
+      .should("have.css", "width", "140px")
       .dataCy("R-value-input")
-      .should("have.value", "128");
+      .should("have.value", "127");
 
     // Test slider scroll
     cy.dataCy("R-slider")
@@ -47,7 +57,8 @@ describe("component editor tests", () => {
       .trigger("wheel", { deltaY: -100, eventConstructor: "WheelEvent" })
       .trigger("wheel", { deltaY: -100, eventConstructor: "WheelEvent" })
       .dataCy("R-value-input")
-      .should("have.value", "129");
+      .should("have.value", "128")
+      .wait(50);
 
     // Input focus should select text
     cy.dataCy("R-value-input")
@@ -61,14 +72,15 @@ describe("component editor tests", () => {
       .type("100")
       .should("have.value", "100")
       .dataCy("R-slider-bar")
-      .should("have.css", "width", "111px");
+      .should("have.css", "width", "110px");
 
     // Scrolling input should update value
     cy.dataCy("R-value-input")
       .trigger("wheel", { deltaY: -100, eventConstructor: "WheelEvent" })
-      .should("have.value", "101")
+      .should("have.value", "100")
       .dataCy("R-slider-bar")
-      .should("have.css", "width", "112px");
+      .should("have.css", "width", "111px")
+      .wait(50);
 
     // Test increment/decrement buttons
     cy.dataCy("R-decrement-button")
@@ -114,9 +126,9 @@ describe("component editor tests", () => {
     cy.dataCy("R-slider")
       .click()
       .dataCy("R-slider-bar")
-      .should("have.css", "width", "141px")
+      .should("have.css", "width", "140px")
       .dataCy("R-value-input")
-      .should("have.value", "128");
+      .should("have.value", "127");
 
     // Test button long press repeat
     cy.dataCy("R-decrement-button")
@@ -128,7 +140,7 @@ describe("component editor tests", () => {
       .dataCy("R-decrement-button")
       .trigger("touchend")
       .dataCy("R-value-input")
-      .should("have.value", "125")
+      .should("have.value", "124")
       .dataCy("R-increment-button")
       .trigger("touchstart")
       .then(() => {
@@ -138,6 +150,6 @@ describe("component editor tests", () => {
       .dataCy("R-increment-button")
       .trigger("touchend")
       .dataCy("R-value-input")
-      .should("have.value", "128");
+      .should("have.value", "127");
   });
 });

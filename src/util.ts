@@ -1,6 +1,7 @@
 import type { RefObject } from "react";
 
-import type { CartesianSpace } from "./types";
+import type { CartesianSpace, Range } from "./types";
+import { Direction } from "./types";
 
 export function minmax(number: number, min: number, max: number) {
   return Math.min(max, Math.max(min, number));
@@ -43,4 +44,48 @@ export function setMeasurements(
     setOrigin({ x: rect.left, y: rect.top });
     setDimensions({ x: rect.width, y: rect.height });
   }
+}
+
+export function valueToPosition(
+  value: number,
+  maxPosition: number,
+  valueRange: Range,
+) {
+  if (maxPosition <= 0 || !isFinite(value)) return 0;
+
+  const rangeSpan = Math.abs(valueRange.min) + Math.abs(valueRange.max);
+  if (rangeSpan === 0) return 0;
+
+  const position = Math.round(
+    maxPosition *
+      ((value + Math.abs(valueRange.min)) /
+        (Math.abs(valueRange.min) + Math.abs(valueRange.max))),
+  );
+  return position;
+}
+
+export function positionToValue(
+  position: number,
+  maxPosition: number,
+  valueRange: Range,
+) {
+  if (maxPosition <= 0 || !isFinite(position)) return valueRange.min;
+
+  const rangeSpan = Math.abs(valueRange.min) + Math.abs(valueRange.max);
+  if (rangeSpan === 0) return valueRange.min;
+
+  const value =
+    (position / maxPosition) *
+      (Math.abs(valueRange.min) + Math.abs(valueRange.max)) -
+    Math.abs(valueRange.min);
+
+  return value;
+}
+
+export function chooseValueByDirection(
+  direction: Direction,
+  xValue: number,
+  yValue: number,
+) {
+  return direction === Direction.HORIZONTAL ? xValue : yValue;
 }

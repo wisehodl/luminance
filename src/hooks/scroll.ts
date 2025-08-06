@@ -35,7 +35,7 @@ export function useScroll<T extends HTMLElement>({
   onScrollDown: ScrollHandler;
   deltaYMultiplier?: number;
 }) {
-  const [_, setScrollLength] = useState(0);
+  const scrollLength = useRef(0);
 
   const onScrollUpRef = useRef(onScrollUp);
   const onScrollDownRef = useRef(onScrollDown);
@@ -49,16 +49,14 @@ export function useScroll<T extends HTMLElement>({
 
   const handleWheelEvent = useCallback((event: WheelEvent) => {
     event.preventDefault();
-    console.log("Handling wheel event.");
 
-    setScrollLength((prev) =>
-      handleScroll(
-        prev,
-        event.deltaY * deltaYMultiplierRef.current,
-        onScrollDownRef.current,
-        onScrollUpRef.current,
-      ),
+    const newScrollLength = handleScroll(
+      scrollLength.current,
+      event.deltaY * deltaYMultiplierRef.current,
+      onScrollDownRef.current,
+      onScrollUpRef.current,
     );
+    scrollLength.current = newScrollLength;
   }, []);
 
   const addScrollListener = useCallback(() => {

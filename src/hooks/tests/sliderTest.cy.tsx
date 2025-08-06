@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
 import type { CartesianSpace } from "@/types";
+import { Direction } from "@/types";
+import { chooseValueByDirection, valueToPosition } from "@/util";
 
-import { Direction, useSlider } from "../slider";
+import { useSlider } from "../slider";
 
 // Test Fixtures
 
@@ -13,13 +15,16 @@ function TestSlider({
 }) {
   const [origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
-  const [position, setPosition] = useState(0);
-  const [sliderValue, setSliderValue] = useState(0);
+  const [value, setValue] = useState(0);
+  const position = useRef(0);
+  const valueRange = { min: 0, max: 100 };
   const { sliderRef, isDragging } = useSlider({
     direction,
     origin,
     dimensions,
-    setPosition,
+    valueRange,
+    value,
+    setValue,
   });
 
   const railRef = useRef<HTMLSpanElement>(null);
@@ -41,12 +46,23 @@ function TestSlider({
     const maxValue =
       direction == Direction.HORIZONTAL ? dimensions.x : dimensions.y;
     if (maxValue > 0) {
-      const percentage = parseFloat(((position / maxValue) * 100).toFixed(3));
-      setSliderValue(percentage);
+      const percentage = parseFloat(
+        ((position.current / maxValue) * 100).toFixed(3),
+      );
+      setValue(percentage);
     } else {
-      setSliderValue(0);
+      setValue(0);
     }
-  }, [dimensions, direction, position]);
+  }, [dimensions, direction]);
+
+  useEffect(() => {
+    const maxPosition = chooseValueByDirection(
+      direction,
+      dimensions.x,
+      dimensions.y,
+    );
+    position.current = valueToPosition(value, maxPosition, valueRange);
+  }, [value, direction, dimensions, valueRange]);
 
   const isHorizontal = direction === Direction.HORIZONTAL;
 
@@ -82,8 +98,8 @@ function TestSlider({
           style={{
             position: "absolute",
             ...(isHorizontal
-              ? { left: position, top: 0 }
-              : { left: 0, top: position }),
+              ? { left: position.current, top: 0 }
+              : { left: 0, top: position.current }),
             width: 50,
             height: 50,
             background: "rgba(255,0,0,0.5)",
@@ -92,8 +108,9 @@ function TestSlider({
         />
       </div>
       <p>
-        Position: <span data-cy="position-display">{position}</span>px
-        <br /> Value: <span data-cy="value-display">{sliderValue}</span>
+        Value: <span data-cy="value-display">{value}</span>
+        <br /> Position:{" "}
+        <span data-cy="position-display">{position.current}</span>px
       </p>
     </>
   );
