@@ -16,7 +16,7 @@ function TestSlider({
   const [origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [value, setValue] = useState(0);
-  const position = useRef(0);
+  const [position, setPosition] = useState(0);
   const valueRange = { min: 0, max: 100 };
   const { sliderRef, isDragging } = useSlider({
     direction,
@@ -46,9 +46,7 @@ function TestSlider({
     const maxValue =
       direction == Direction.HORIZONTAL ? dimensions.x : dimensions.y;
     if (maxValue > 0) {
-      const percentage = parseFloat(
-        ((position.current / maxValue) * 100).toFixed(3),
-      );
+      const percentage = parseFloat(((position / maxValue) * 100).toFixed(3));
       setValue(percentage);
     } else {
       setValue(0);
@@ -61,7 +59,8 @@ function TestSlider({
       dimensions.x,
       dimensions.y,
     );
-    position.current = valueToPosition(value, maxPosition, valueRange);
+    const newPosition = valueToPosition(value, maxPosition, valueRange);
+    setPosition(newPosition);
   }, [value, direction, dimensions, valueRange]);
 
   const isHorizontal = direction === Direction.HORIZONTAL;
@@ -98,8 +97,8 @@ function TestSlider({
           style={{
             position: "absolute",
             ...(isHorizontal
-              ? { left: position.current, top: 0 }
-              : { left: 0, top: position.current }),
+              ? { left: position, top: 0 }
+              : { left: 0, top: position }),
             width: 50,
             height: 50,
             background: "rgba(255,0,0,0.5)",
@@ -109,8 +108,7 @@ function TestSlider({
       </div>
       <p>
         Value: <span data-cy="value-display">{value}</span>
-        <br /> Position:{" "}
-        <span data-cy="position-display">{position.current}</span>px
+        <br /> Position: <span data-cy="position-display">{position}</span>px
       </p>
     </>
   );

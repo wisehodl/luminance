@@ -57,7 +57,7 @@ export function useSlider({
 
   // Internal position management
   const [position, setPosition] = useState(0);
-  const positionRef = useRef(0);
+  const positionRef = useRef(position);
 
   useEffect(() => {
     directionRef.current = direction;
@@ -68,8 +68,11 @@ export function useSlider({
       dimensions.x,
       dimensions.y,
     );
+  }, [direction, origin, dimensions]);
+
+  useEffect(() => {
     valueRangeRef.current = valueRange;
-  }, [direction, origin, dimensions, valueRangeRef]);
+  }, [valueRangeRef]);
 
   useEffect(() => {
     setValueRef.current = setValue;

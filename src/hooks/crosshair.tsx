@@ -7,7 +7,6 @@ import {
   isTouchEvent,
   minmax,
   positionToValue,
-  valueToPosition,
 } from "@/util";
 
 if (typeof TouchEvent === "undefined") {
@@ -18,10 +17,6 @@ if (typeof TouchEvent === "undefined") {
 export function useCrosshair({
   origin,
   dimensions,
-  setXPosition,
-  setYPosition,
-  xValue,
-  yValue,
   setXValue,
   setYValue,
   xValueRange,
@@ -29,10 +24,6 @@ export function useCrosshair({
 }: {
   origin: CartesianSpace;
   dimensions: CartesianSpace;
-  setXPosition: Setter<number>;
-  setYPosition: Setter<number>;
-  xValue: number;
-  yValue: number;
   setXValue: Setter<number>;
   setYValue: Setter<number>;
   xValueRange: Range;
@@ -41,8 +32,11 @@ export function useCrosshair({
   const [isDragging, setIsDragging] = useState(false);
   const crosshairRef = useRef<HTMLDivElement>(null);
 
+  // Crosshair UI refs
   const originRef = useRef(origin);
   const dimensionsRef = useRef(dimensions);
+
+  // Crosshair value refs
   const setXValueRef = useRef(setXValue);
   const setYValueRef = useRef(setYValue);
   const xValueRangeRef = useRef(xValueRange);
@@ -51,11 +45,12 @@ export function useCrosshair({
   useEffect(() => {
     originRef.current = origin;
     dimensionsRef.current = dimensions;
-    setXValueRef.current = setXValue;
-    setYValueRef.current = setYValue;
+  }, [origin, dimensions]);
+
+  useEffect(() => {
     xValueRangeRef.current = xValueRange;
     yValueRangeRef.current = yValueRange;
-  }, [origin, dimensions, setXValue, setYValue, xValueRange, yValueRange]);
+  }, [xValueRange, yValueRange]);
 
   const calculatePositions = useCallback((event: MouseEvent | TouchEvent) => {
     const orig = originRef.current;
@@ -121,15 +116,6 @@ export function useCrosshair({
     },
     [calculatePositions, handleMove, handleEnd],
   );
-
-  useEffect(() => {
-    const dims = dimensionsRef.current;
-    const newXPos = valueToPosition(xValue, dims.x - 1, xValueRangeRef.current);
-    const newYPos = valueToPosition(yValue, dims.y - 1, yValueRangeRef.current);
-
-    if (newXPos === newXPos) setXPosition(newXPos);
-    if (newYPos === newYPos) setYPosition(newYPos);
-  }, [xValue, yValue, setXPosition, setYPosition]);
 
   useEffect(() => {
     const currentRef = crosshairRef.current;

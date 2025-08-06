@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import type { CartesianSpace } from "@/types";
+import { valueToPosition } from "@/util";
 
 import { useCrosshair } from "../crosshair";
 
@@ -9,20 +10,16 @@ import { useCrosshair } from "../crosshair";
 function TestSquare() {
   const [origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
-  const [xPosition, setXPosition] = useState(0);
-  const [yPosition, setYPosition] = useState(0);
   const [xValue, setXValue] = useState(0);
   const [yValue, setYValue] = useState(0);
   const xValueRange = { min: 0, max: 100 };
   const yValueRange = { min: 0, max: 100 };
+  const [xPosition, setXPosition] = useState(0);
+  const [yPosition, setYPosition] = useState(0);
 
   const { crosshairRef, isDragging } = useCrosshair({
     origin,
     dimensions,
-    setXPosition,
-    setYPosition,
-    xValue,
-    yValue,
     setXValue,
     setYValue,
     xValueRange,
@@ -43,6 +40,13 @@ function TestSquare() {
       setDimensions({ x: rect.width, y: rect.height });
     }
   }, []);
+
+  useEffect(() => {
+    const newXPos = valueToPosition(xValue, dimensions.x - 1, xValueRange);
+    const newYPos = valueToPosition(yValue, dimensions.y - 1, yValueRange);
+    setXPosition(newXPos);
+    setYPosition(newYPos);
+  }, [xValue, yValue]);
 
   return (
     <>
