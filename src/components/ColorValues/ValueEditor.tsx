@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, RefObject } from "react";
 
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import clsx from "clsx";
@@ -180,7 +183,7 @@ function Button({
 }) {
   const isIncrease = direction === "increase";
   const label = isIncrease ? "Increase" : "Decrease";
-  const icon = isIncrease ? faAngleRight : faAngleLeft;
+  const icon = isIncrease ? faChevronRight : faChevronLeft;
   const dataCy = `${componentSymbol}-${isIncrease ? "increment" : "decrement"}-button`;
 
   const step = isIncrease ? 1 : -1;
@@ -196,7 +199,7 @@ function Button({
         aria-label={`${label} ${componentSymbol}`}
         data-cy={dataCy}
       >
-        <FontAwesomeIcon icon={icon} />
+        <FontAwesomeIcon icon={icon} transform="shrink-2 down-1" />
       </button>
     </div>
   );
@@ -270,8 +273,7 @@ function useLongPressRepeat(
   };
 
   // Intentional 'any' to avoid overly complex typing
-  const start = (e: Event | any) => {
-    e.preventDefault();
+  const start = () => {
     cleanup();
 
     timeoutRef.current = setTimeout(() => {
