@@ -1,5 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, RefObject } from "react";
+
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import clsx from "clsx";
 
@@ -177,7 +180,7 @@ function Button({
 }) {
   const isIncrease = direction === "increase";
   const label = isIncrease ? "Increase" : "Decrease";
-  const symbol = isIncrease ? ">" : "<";
+  const icon = isIncrease ? faAngleRight : faAngleLeft;
   const dataCy = `${componentSymbol}-${isIncrease ? "increment" : "decrement"}-button`;
 
   const step = isIncrease ? 1 : -1;
@@ -193,7 +196,7 @@ function Button({
         aria-label={`${label} ${componentSymbol}`}
         data-cy={dataCy}
       >
-        {symbol}
+        <FontAwesomeIcon icon={icon} />
       </button>
     </div>
   );
