@@ -89,3 +89,8 @@ export function chooseValueByDirection(
 ) {
   return direction === Direction.HORIZONTAL ? xValue : yValue;
 }
+
+export function roundTo(value: number, decimals: number = 0) {
+  const factor = Math.pow(10, decimals);
+  return Math.round(value * factor) / factor;
+}

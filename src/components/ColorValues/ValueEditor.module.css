@@ -2,7 +2,7 @@
   display: flex;
   align-items: stretch;
   width: 100%;
-  height: var(--height, 25px);
+  min-height: 0;
   font-family: monospace;
   border: 1px solid black;
   border-top: none;
@@ -84,5 +84,4 @@
   font-family: monospace;
   font-size: 14px;
   text-align: right;
-  box-sizing: border-box;
 }

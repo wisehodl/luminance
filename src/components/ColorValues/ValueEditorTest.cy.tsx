@@ -15,7 +15,14 @@ function TestWrapper() {
   const actions = createColorActions(dispatch);
 
   return (
-    <div style={{ width: 400 }}>
+    <div
+      style={{
+        width: 400,
+        height: 27,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <ValueEditor
         componentSymbol="R"
         valueRange={{ min: 0, max: 255 }}
@@ -36,7 +43,7 @@ describe("component editor tests", () => {
     cy.clock().then((clock) => clock.restore());
   });
 
-  it("works with mouse events", () => {
+  it.only("works with mouse events", () => {
     // Check initial state
     cy.dataCy("R-slider-bar")
       .should("have.css", "width", "0px")

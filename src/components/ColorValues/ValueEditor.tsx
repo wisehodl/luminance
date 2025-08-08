@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { ChangeEvent, RefObject } from "react";
+import type { CSSProperties, ChangeEvent, RefObject } from "react";
 
 import {
   faChevronLeft,
@@ -36,17 +36,18 @@ function ValueEditor({
   const direction = Direction.HORIZONTAL;
   const [origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
-  const position = useRef(0);
+  const [position, setPosition] = useState(0);
 
   useEffect(() => {
-    position.current = valueToPosition(value, dimensions.x, valueRange);
+    const newPosition = valueToPosition(value, dimensions.x, valueRange);
+    setPosition(newPosition);
   }, [value, dimensions, valueRange]);
 
   // Handler functions
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = parseInt(e.target.value, 10);
     if (!isNaN(inputValue)) {
-      const actualValue = inputValue / scale;
+      const actualValue = Math.floor(inputValue) / scale;
       const newValue = minmax(actualValue, valueRange.min, valueRange.max);
 
       setValue(newValue);
@@ -59,7 +60,7 @@ function ValueEditor({
     setValue((prev) => {
       const scaledStep = step / scale;
       const newValue = minmax(
-        prev + scaledStep,
+        Math.floor(prev * scale) / scale + scaledStep,
         valueRange.min,
         valueRange.max,
       );
@@ -96,7 +97,7 @@ function ValueEditor({
 
       <Slider
         sliderRef={sliderRef}
-        position={position.current}
+        position={position}
         dimensions={dimensions}
         componentSymbol={componentSymbol}
       />
