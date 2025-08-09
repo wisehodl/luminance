@@ -14,11 +14,11 @@ interface MediaQueryContextType {
   isMobilePortrait: boolean;
 }
 
-const MediaQueryContext = createContext<MediaQueryContextType | undefined>(
-  undefined,
-);
+export const MediaQueryContext = createContext<
+  MediaQueryContextType | undefined
+>(undefined);
 
-function MediaQueryProvider({ children }: { children: ReactNode }) {
+export const MediaQueryProvider = ({ children }: { children: ReactNode }) => {
   const [viewportMode, setViewportMode] = useState<ViewportMode>(
     ViewportMode.DESKTOP,
   );
@@ -71,7 +71,4 @@ function MediaQueryProvider({ children }: { children: ReactNode }) {
       {children}
     </MediaQueryContext.Provider>
   );
-}
-
-export default MediaQueryProvider;
-export { MediaQueryContext };
+};

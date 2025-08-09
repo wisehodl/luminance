@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
 
 import clsx from "clsx";
 
 import ColorPicker from "@components/ColorPicker/ColorPicker";
 import ColorValues from "@components/ColorValues/ColorValues";
 import { LeftMenu, RightMenu } from "@components/SideMenu";
-
 import { useMediaQuery } from "@providers/hooks";
+import { useSelectedColor } from "@providers/hooks";
 
 import styles from "./App.module.css";
 
@@ -90,6 +90,8 @@ function MobileRightNav({ onClick, isOpen }: MenuButtonProps) {
 }
 
 function MobileFirstZone() {
+  const { selectedColor, selectedColorActions } = useSelectedColor();
+
   return (
     <section className={styles.mobileFirstZone} aria-label="Color tools">
       <div
@@ -112,7 +114,7 @@ function MobileFirstZone() {
           aria-roledescription="slide"
           aria-label="Color values"
         >
-          <ColorValues />
+          <ColorValues color={selectedColor} actions={selectedColorActions} />
         </div>
       </div>
     </section>
@@ -190,6 +192,8 @@ function MobileContent({
 // Desktop Layout Components
 
 function FirstZone() {
+  const { selectedColor, selectedColorActions } = useSelectedColor();
+
   return (
     <section className={styles.firstZone} aria-label="Color tools">
       <div className={styles.colorPickerWrapper} aria-label="Color picker">
@@ -197,7 +201,7 @@ function FirstZone() {
       </div>
 
       <div className={styles.colorValuesWrapper} aria-label="Color values">
-        <ColorValues />
+        <ColorValues color={selectedColor} actions={selectedColorActions} />
       </div>
     </section>
   );

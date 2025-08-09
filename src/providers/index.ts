@@ -1,3 +1,4 @@
-import MediaQueryProvider from "./MediaQueryProvider";
+import { MediaQueryProvider } from "./MediaQueryProvider";
+import { SelectedColorProvider } from "./SelectedColorProvider";
 
-export { MediaQueryProvider };
+export { MediaQueryProvider, SelectedColorProvider };

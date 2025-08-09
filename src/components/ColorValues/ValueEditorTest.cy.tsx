@@ -4,7 +4,7 @@ import { Color } from "colorlib";
 
 import { colorReducer, createColorActions } from "@hooks/color";
 
-import ValueEditor from "./ValueEditor";
+import { ValueEditor } from "./ValueEditor";
 
 const initialState = {
   color: Color.from_hex("000"),
@@ -18,7 +18,6 @@ function TestWrapper() {
     <div
       style={{
         width: 400,
-        height: 27,
         display: "flex",
         flexDirection: "column",
       }}
@@ -43,7 +42,7 @@ describe("component editor tests", () => {
     cy.clock().then((clock) => clock.restore());
   });
 
-  it.only("works with mouse events", () => {
+  it("works with mouse events", () => {
     // Check initial state
     cy.dataCy("R-slider-bar")
       .should("have.css", "width", "0px")
@@ -158,5 +157,36 @@ describe("component editor tests", () => {
       .trigger("touchend")
       .dataCy("R-value-input")
       .should("have.value", "127");
+  });
+
+  it("works with keyboard events", () => {
+    // Tab through components
+    cy.press(Cypress.Keyboard.Keys.TAB);
+    cy.dataCy("R-slider").should("have.focus");
+
+    cy.press(Cypress.Keyboard.Keys.TAB);
+    cy.dataCy("R-decrement-button").should("have.focus");
+
+    cy.press(Cypress.Keyboard.Keys.TAB);
+    cy.dataCy("R-value-input").should("have.focus");
+
+    cy.press(Cypress.Keyboard.Keys.TAB);
+    cy.dataCy("R-increment-button").should("have.focus");
+
+    // Pressing Escape should blur focused element
+    cy.dataCy("R-increment-button").type("{esc}");
+    cy.dataCy("R-increment-button").should("not.have.focus");
+
+    cy.dataCy("R-slider").focus();
+    cy.dataCy("R-slider").type("{esc}");
+    cy.dataCy("R-slider").should("not.have.focus");
+
+    cy.dataCy("R-decrement-button").focus();
+    cy.dataCy("R-decrement-button").type("{esc}");
+    cy.dataCy("R-decrement-button").should("not.have.focus");
+
+    cy.dataCy("R-value-input").focus();
+    cy.dataCy("R-value-input").type("{esc}");
+    cy.dataCy("R-value-input").should("not.have.focus");
   });
 });

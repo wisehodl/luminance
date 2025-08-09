@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc -b && vite build",
     "build:wasm": "wasm-pack build colorlib -t bundler -d pkg --release",
+    "check": "tsc --noEmit -p tsconfig.app.json",
     "clean": "rm -rf dist colorlib/pkg*",
     "cypress:open": "1>/dev/null 2>/dev/null cypress open -d &",
     "dev": "vite",

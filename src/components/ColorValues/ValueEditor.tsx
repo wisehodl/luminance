@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { CSSProperties, ChangeEvent, RefObject } from "react";
+import type { ChangeEvent, KeyboardEvent, RefObject } from "react";
 
 import {
   faChevronLeft,
@@ -8,29 +8,37 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import clsx from "clsx";
+import * as colorlib from "colorlib";
 
 import type { CartesianSpace, Range, Setter, Timeout } from "@/types";
 import { Direction } from "@/types";
 import { minmax, setMeasurements, valueToPosition } from "@/util";
+import type { HexColorActions } from "@hooks/color";
 import { useScroll } from "@hooks/scroll";
 import { useSlider } from "@hooks/slider";
 import { useResize } from "@hooks/window";
 
 import styles from "./ValueEditor.module.css";
 
+// ------------ //
+// Value Editor //
+// ------------ //
+
 // Component
-function ValueEditor({
+export function ValueEditor({
   componentSymbol,
   valueRange,
   value,
   setValue,
   scale = 1,
+  onKeyDown,
 }: {
   componentSymbol: string;
   valueRange: Range;
   value: number;
   setValue: Setter<number>;
   scale?: number;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
 }) {
   // Set up component state
   const direction = Direction.HORIZONTAL;
@@ -100,12 +108,14 @@ function ValueEditor({
         position={position}
         dimensions={dimensions}
         componentSymbol={componentSymbol}
+        onKeyDown={onKeyDown}
       />
 
       <Button
         direction="decrease"
         handleValueStep={handleValueStep}
         componentSymbol={componentSymbol}
+        onKeyDown={onKeyDown}
       />
 
       <Value
@@ -115,12 +125,14 @@ function ValueEditor({
         componentSymbol={componentSymbol}
         handleValueStep={handleValueStep}
         scale={scale}
+        onKeyDown={onKeyDown}
       />
 
       <Button
         direction="increase"
         handleValueStep={handleValueStep}
         componentSymbol={componentSymbol}
+        onKeyDown={onKeyDown}
       />
     </div>
   );
@@ -144,12 +156,22 @@ function Slider({
   position,
   dimensions,
   componentSymbol,
+  onKeyDown,
 }: {
   sliderRef: RefObject<HTMLDivElement | null>;
   position: number;
   dimensions: CartesianSpace;
   componentSymbol: string;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
 }) {
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      (e.target as HTMLElement).blur();
+    } else if (onKeyDown) {
+      onKeyDown(e);
+    }
+  };
+
   return (
     <div className={clsx(styles.section, styles.sliderSection)}>
       <div
@@ -162,6 +184,7 @@ function Slider({
         aria-labelledby={`${componentSymbol}-label`}
         tabIndex={0}
         data-cy={`${componentSymbol}-slider`}
+        onKeyDown={handleKeyDown}
       >
         <div
           className={styles.sliderBar}
@@ -177,10 +200,12 @@ function Button({
   direction,
   componentSymbol,
   handleValueStep,
+  onKeyDown,
 }: {
   direction: "increase" | "decrease";
   componentSymbol: string;
   handleValueStep: (step: number) => void;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
 }) {
   const isIncrease = direction === "increase";
   const label = isIncrease ? "Increase" : "Decrease";
@@ -191,6 +216,14 @@ function Button({
   const onClick = () => handleValueStep(step);
   const longPressProps = useLongPressRepeat(onClick);
 
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      (e.target as HTMLElement).blur();
+    } else if (onKeyDown) {
+      onKeyDown(e);
+    }
+  };
+
   return (
     <div className={clsx(styles.section, styles.buttonWrapper)}>
       <button
@@ -199,6 +232,7 @@ function Button({
         {...longPressProps}
         aria-label={`${label} ${componentSymbol}`}
         data-cy={dataCy}
+        onKeyDown={handleKeyDown}
       >
         <FontAwesomeIcon icon={icon} transform="shrink-2 down-1" />
       </button>
@@ -213,6 +247,7 @@ function Value({
   componentSymbol,
   handleValueStep,
   scale,
+  onKeyDown,
 }: {
   value: number;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -220,6 +255,7 @@ function Value({
   componentSymbol: string;
   handleValueStep: (step: number) => void;
   scale: number;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
 }) {
   const valueRef = useRef(null);
   const valueScroller = useScroll({
@@ -227,6 +263,14 @@ function Value({
     onScrollUp: () => handleValueStep(1),
     onScrollDown: () => handleValueStep(-1),
   });
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      (e.target as HTMLElement).blur();
+    } else if (onKeyDown) {
+      onKeyDown(e);
+    }
+  };
 
   useEffect(() => {
     if (valueRef.current) {
@@ -252,6 +296,7 @@ function Value({
         aria-valuemax={valueRange.max}
         aria-valuenow={value}
         data-cy={`${componentSymbol}-value-input`}
+        onKeyDown={handleKeyDown}
       />
     </div>
   );
@@ -298,4 +343,88 @@ function useLongPressRepeat(
   };
 }
 
-export default ValueEditor;
+// ---------- //
+// Hex Editor //
+// ---------- //
+
+const extractHexValue = (value: string): string | null => {
+  const match = value.match(/^#?([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/);
+  return match ? match[1] : null;
+};
+
+const formatHexString = (
+  color: colorlib.Hex,
+  preserveShortFormat: boolean = false,
+): string => {
+  const hexValue = color.to_code();
+
+  if (preserveShortFormat) {
+    if (
+      hexValue[0] === hexValue[1] &&
+      hexValue[2] === hexValue[3] &&
+      hexValue[4] === hexValue[5]
+    ) {
+      return `#${hexValue[0]}${hexValue[2]}${hexValue[4]}`;
+    }
+  }
+
+  return `#${color.to_code()}`;
+};
+
+export function HexEditor({
+  color,
+  actions,
+  onKeyDown,
+}: {
+  color: colorlib.Hex;
+  actions: HexColorActions;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
+}) {
+  const [inputValue, setInputValue] = useState(formatHexString(color));
+  const [isShortHex, setIsShortHex] = useState(false);
+
+  useEffect(() => {
+    setInputValue(formatHexString(color, isShortHex));
+  }, [color]);
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+
+    const hex = extractHexValue(value);
+    if (hex) {
+      setIsShortHex(hex.length === 3);
+      const newColor = colorlib.Hex.from_code(hex);
+      actions.setHex(newColor);
+    }
+  };
+
+  const onBlur = () => {
+    setInputValue(formatHexString(color));
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      (e.target as HTMLElement).blur();
+    } else if (onKeyDown) {
+      onKeyDown(e);
+    }
+  };
+
+  return (
+    <div data-cy="hex-editor" className={styles.hexEditor}>
+      <div className={clsx(styles.section, styles.hexLabel)}>HEX</div>
+      <div className={clsx(styles.section, styles.hexValueWrapper)}>
+        <input
+          type="text"
+          data-cy="hex-value-input"
+          value={inputValue}
+          onChange={onChange}
+          onBlur={onBlur}
+          onFocus={(e) => e.target.select()}
+          onKeyDown={handleKeyDown}
+        />
+      </div>
+    </div>
+  );
+}
