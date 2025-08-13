@@ -4,9 +4,9 @@ import type {
   HCLColorActions,
   HSVColorActions,
   RGBColorActions,
-} from "@hooks/color";
+} from "@/hooks/color";
 
-import styles from "./SpaceEditor.module.css";
+import styles from "./ColorValues.module.css";
 import { ValueEditor } from "./ValueEditor";
 
 type ColorSpaceProps =

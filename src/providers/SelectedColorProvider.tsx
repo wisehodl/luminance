@@ -1,10 +1,10 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useReducer } from "react";
 import type { ReactNode } from "react";
 
 import * as colorlib from "colorlib";
 
-import { colorReducer, createColorActions } from "@hooks/color";
-import type { ColorActions } from "@hooks/color";
+import { colorReducer, createColorActions } from "@/hooks/color";
+import type { ColorActions } from "@/hooks/color";
 
 interface SelectedColorContextType {
   selectedColor: colorlib.Color;

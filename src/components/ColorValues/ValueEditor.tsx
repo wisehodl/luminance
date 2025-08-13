@@ -10,15 +10,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import * as colorlib from "colorlib";
 
+import type { HexColorActions } from "@/hooks/color";
+import { useScroll } from "@/hooks/scroll";
+import { useSlider } from "@/hooks/slider";
+import { useResize } from "@/hooks/window";
 import type { CartesianSpace, Range, Setter, Timeout } from "@/types";
 import { Direction } from "@/types";
-import { minmax, setMeasurements, valueToPosition } from "@/util";
-import type { HexColorActions } from "@hooks/color";
-import { useScroll } from "@hooks/scroll";
-import { useSlider } from "@hooks/slider";
-import { useResize } from "@hooks/window";
+import { minmax, roundTo, setMeasurements, valueToPosition } from "@/util";
 
-import styles from "./ValueEditor.module.css";
+import styles from "./ColorValues.module.css";
 
 // ------------ //
 // Value Editor //
@@ -68,7 +68,7 @@ export function ValueEditor({
     setValue((prev) => {
       const scaledStep = step / scale;
       const newValue = minmax(
-        Math.floor(prev * scale) / scale + scaledStep,
+        roundTo(Math.floor(roundTo(prev * scale, 6)) / scale + scaledStep, 6),
         valueRange.min,
         valueRange.max,
       );

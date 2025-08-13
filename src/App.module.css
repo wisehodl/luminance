@@ -1,7 +1,42 @@
 .appWrapper {
+  background-color: white;
   height: 100%;
   width: 100%;
+  max-width: 1200px;
   overflow: hidden;
+  margin: 0 auto;
+  box-shadow: 0 0 40px #7a7a7a;
+  border-left: 2px solid #7a7a7a;
+  border-right: 2px solid #7a7a7a;
+}
+
+.appHeader {
+  height: 40px;
+  display: flex;
+  align-items: baseline;
+  border-bottom: 2px solid #7a7a7a;
+  padding: 20px 30px 12px;
+}
+
+.appHeader .title {
+  /* Typography */
+  font-family: "Inter", "Roboto", sans-serif;
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.4rem;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.appHeader .subtitle {
+  margin-left: 1.5rem;
+  font-family: "Inter", "Roboto", sans-serif;
+  font-style: italic;
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 0.08rem;
+  line-height: 1;
+  color: #7a7a7a;
 }
 
 .mobileContent,
@@ -17,146 +52,52 @@
   scrollbar-width: none;
 }
 
+.appWrapper {
+}
+
+.mobileContent {
+  display: none;
+}
+
+.mainContent {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.firstZone {
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid #7a7a7a;
+}
+
+.secondZone {
+  padding: 40px;
+  color: #555;
+  font-style: italic;
+}
+
+.colorPickerWrapper {
+  border-bottom: 2px solid #7a7a7a;
+}
+
+.colorValuesWrapper {
+}
+
+.paletteEditorWrapper {
+}
+
+.paletteLibraryWrapper {
+}
+
 /* Large */
 @media (min-width: 992px),
   (min-width: 568px) and (max-width: 991px) and (orientation: portrait) {
-  .appWrapper {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .mobileContent {
-    display: none;
-  }
-
-  .mainContent {
-    display: flex;
-  }
-
-  .firstZone {
-    flex: 1;
-  }
-
-  .secondZone {
-    flex: 1;
-  }
-
-  .colorPickerWrapper {
-  }
-
-  .colorValuesWrapper {
-  }
-
-  .paletteEditorWrapper {
-  }
-
-  .paletteLibraryWrapper {
-  }
 }
 
 /* Landscape Phone */
 @media (min-width: 568px) and (max-width: 991px) and (orientation: landscape) {
-  .appWrapper {
-  }
-
-  .mainContent,
-  .mobileTopNav {
-    display: none;
-  }
-
-  .mobileContent {
-    display: flex;
-  }
-
-  .mobileLeftNav {
-  }
-
-  .mobileRightNav {
-  }
-
-  .mobileFirstZone {
-    flex: 1;
-  }
-
-  .mobileSecondZone {
-    flex: 1;
-  }
-
-  .tabWrapper {
-    max-height: 100%;
-    overflow-y: scroll;
-    scroll-snap-type: y mandatory;
-  }
-
-  .tabWrapper .tab {
-    scroll-snap-align: start;
-  }
-
-  .colorPickerWrapper {
-  }
-
-  .colorValuesWrapper {
-  }
-
-  .paletteEditorWrapper {
-  }
-
-  .paletteLibraryWrapper {
-  }
 }
 
 /* Portrait Phone */
 @media (max-width: 567px) {
-  .appWrapper {
-  }
-
-  .mainContent,
-  .mobileRightNav,
-  .mobileLeftNav {
-    display: none;
-  }
-
-  .mobileContent {
-  }
-
-  .mobileTopNav {
-    display: flex;
-  }
-
-  .leftMenuButton {
-    margin-right: auto;
-  }
-
-  .rightMenuButton {
-    margin-left: auto;
-  }
-
-  .mobileFirstZone {
-  }
-
-  .mobileSecondZone {
-  }
-
-  .tabWrapper {
-    display: flex;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-  }
-
-  .tabWrapper .tab {
-    min-width: 100vw;
-    scroll-snap-align: start;
-  }
-
-  .colorPickerWrapper {
-  }
-
-  .colorValuesWrapper {
-  }
-
-  .paletteEditorWrapper {
-  }
-
-  .paletteLibraryWrapper {
-  }
 }

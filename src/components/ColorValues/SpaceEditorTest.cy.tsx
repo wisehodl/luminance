@@ -2,8 +2,8 @@ import { useReducer } from "react";
 
 import { Color } from "colorlib";
 
+import { colorReducer, createColorActions } from "@/hooks/color";
 import { roundTo } from "@/util";
-import { colorReducer, createColorActions } from "@hooks/color";
 
 import SpaceEditor from "./SpaceEditor";
 

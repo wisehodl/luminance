@@ -55,9 +55,9 @@
       "^react$",
       "^react-dom(.*)$",
       "^react(.*)$",
-      "^@(?!(components|hooks|providers|/))(.*)$",
+      "^@(?!(/))(.*)$",
       "^(?!@|[.])(.*)$",
-      "^@(/|components|hooks|providers)(.*)$",
+      "^@(/)(.*)$",
       "^[./]"
     ],
     "importOrderSeparation": true,

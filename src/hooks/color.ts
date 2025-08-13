@@ -62,7 +62,7 @@ export function colorReducer(
   }
 }
 
-type Setter = (valOrCallback: SetterValueOrCallback<number>) => void;
+export type Setter = (valOrCallback: SetterValueOrCallback<number>) => void;
 
 export interface CommonColorActions {
   setColor: (color: colorlib.Color) => void;

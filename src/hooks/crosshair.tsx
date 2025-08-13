@@ -9,6 +9,8 @@ import {
   positionToValue,
 } from "@/util";
 
+import { useSmoothAnimation } from "./animation";
+
 if (typeof TouchEvent === "undefined") {
   // @ts-ignore - intentionally creating global
   window.TouchEvent = window.MouseEvent;
@@ -21,6 +23,8 @@ export function useCrosshair({
   setYValue,
   xValueRange,
   yValueRange,
+  invertX,
+  invertY,
 }: {
   origin: CartesianSpace;
   dimensions: CartesianSpace;
@@ -28,6 +32,8 @@ export function useCrosshair({
   setYValue: Setter<number>;
   xValueRange: Range;
   yValueRange: Range;
+  invertX?: boolean;
+  invertY?: boolean;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   const crosshairRef = useRef<HTMLDivElement>(null);
@@ -42,6 +48,9 @@ export function useCrosshair({
   const xValueRangeRef = useRef(xValueRange);
   const yValueRangeRef = useRef(yValueRange);
 
+  // Hooks
+  const smoothAnimation = useSmoothAnimation();
+
   useEffect(() => {
     originRef.current = origin;
     dimensionsRef.current = dimensions;
@@ -55,13 +64,23 @@ export function useCrosshair({
   const calculatePositions = useCallback((event: MouseEvent | TouchEvent) => {
     const orig = originRef.current;
     const dims = dimensionsRef.current;
+    const xRange = xValueRangeRef.current;
+    const yRange = yValueRangeRef.current;
 
     const { clientX, clientY } = extractEventCoordinates(event);
 
     const xPos = minmax(clientX - orig.x, 0, dims.x - 1);
     const yPos = minmax(clientY - orig.y, 0, dims.y - 1);
-    const newXValue = positionToValue(xPos, dims.x - 1, xValueRangeRef.current);
-    const newYValue = positionToValue(yPos, dims.y - 1, yValueRangeRef.current);
+    let newXValue = positionToValue(xPos, dims.x - 1, xRange);
+    let newYValue = positionToValue(yPos, dims.y - 1, yRange);
+
+    if (invertX) {
+      newXValue = xRange.max - newXValue;
+    }
+
+    if (invertY) {
+      newYValue = yRange.max - newYValue;
+    }
 
     setXValueRef.current(newXValue);
     setYValueRef.current(newYValue);
@@ -70,7 +89,7 @@ export function useCrosshair({
   const handleMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
-      calculatePositions(event);
+      smoothAnimation(() => calculatePositions(event));
     },
     [calculatePositions],
   );

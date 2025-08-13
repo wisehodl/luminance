@@ -3,7 +3,7 @@ import type { KeyboardEvent } from "react";
 
 import * as colorlib from "colorlib";
 
-import type { ColorActions } from "@hooks/color";
+import type { ColorActions } from "@/hooks/color";
 
 import styles from "./ColorValues.module.css";
 import SpaceEditor from "./SpaceEditor";

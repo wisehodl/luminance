@@ -1,14 +1,16 @@
-import { useReducer, useState } from "react";
+import { useState } from "react";
 
 import clsx from "clsx";
+import { Color } from "colorlib";
 
-import ColorPicker from "@components/ColorPicker/ColorPicker";
-import ColorValues from "@components/ColorValues/ColorValues";
-import { LeftMenu, RightMenu } from "@components/SideMenu";
-import { useMediaQuery } from "@providers/hooks";
-import { useSelectedColor } from "@providers/hooks";
+import ColorPicker from "@/components/ColorPicker/ColorPicker";
+import ColorValues from "@/components/ColorValues/ColorValues";
+import { LeftMenu, RightMenu } from "@/components/SideMenu";
+import { useMediaQuery } from "@/providers/hooks";
+import { useSelectedColor } from "@/providers/hooks";
 
 import styles from "./App.module.css";
+import { formatCssRgb } from "./util";
 
 // Menu Button Components
 
@@ -106,7 +108,7 @@ function MobileFirstZone() {
           aria-roledescription="slide"
           aria-label="Color Picker"
         >
-          <ColorPicker />
+          <ColorPicker color={selectedColor} actions={selectedColorActions} />
         </div>
         <div
           className={clsx(styles.tab, styles.colorValuesWrapper)}
@@ -191,13 +193,17 @@ function MobileContent({
 
 // Desktop Layout Components
 
+function TitleZone() {
+  return <section className={styles.TitleZone}></section>;
+}
+
 function FirstZone() {
   const { selectedColor, selectedColorActions } = useSelectedColor();
 
   return (
     <section className={styles.firstZone} aria-label="Color tools">
       <div className={styles.colorPickerWrapper} aria-label="Color picker">
-        <ColorPicker />
+        <ColorPicker color={selectedColor} actions={selectedColorActions} />
       </div>
 
       <div className={styles.colorValuesWrapper} aria-label="Color values">
@@ -210,6 +216,7 @@ function FirstZone() {
 function SecondZone() {
   return (
     <section className={styles.secondZone} aria-label="Palette tools">
+      Palette Creator Coming Soon.
       <div
         className={styles.paletteEditorWrapper}
         aria-label="Palette editor"
@@ -224,10 +231,16 @@ function SecondZone() {
 
 function DesktopContent() {
   return (
-    <main className={styles.mainContent}>
-      <FirstZone />
-      <SecondZone />
-    </main>
+    <>
+      <header className={styles.appHeader}>
+        <span className={styles.title}>LUMINANCE</span>
+        <span className={styles.subtitle}>A color picker for humans.</span>
+      </header>
+      <main className={styles.mainContent}>
+        <FirstZone />
+        <SecondZone />
+      </main>
+    </>
   );
 }
 
@@ -236,20 +249,47 @@ function DesktopContent() {
 function App() {
   const [isRightMenuOpen, setIsRightMenuOpen] = useState(false);
   const [isLeftMenuOpen, setIsLeftMenuOpen] = useState(false);
-  const { isDesktop } = useMediaQuery();
+  // const { isDesktop } = useMediaQuery();
+  const isDesktop = true;
+
+  const lum = 0.75;
+  const chr = 0.8;
+  const steps = 8;
+
+  const colors = Array.from({ length: steps }, (_, index) => {
+    const hue = (index * 360) / (steps - 1);
+    return Color.from_hcl(hue, chr, lum);
+  });
+
+  const colorGradient = colors
+    .map((color, index) => {
+      const colorString = formatCssRgb(color.hex);
+      const percentage = (index / (colors.length - 1)) * 100;
+      return `${colorString} ${percentage}%`;
+    })
+    .join(", ");
 
   return (
-    <div className={styles.appWrapper} role="application">
-      {!isDesktop && (
-        <MobileContent
-          isLeftMenuOpen={isLeftMenuOpen}
-          setIsLeftMenuOpen={setIsLeftMenuOpen}
-          isRightMenuOpen={isRightMenuOpen}
-          setIsRightMenuOpen={setIsRightMenuOpen}
-        />
-      )}
+    <div
+      className={styles.background}
+      style={{
+        width: "100%",
+        height: "100%",
+        background: `linear-gradient(180deg, ${colorGradient})`,
+      }}
+    >
+      <div className={styles.appWrapper} role="application">
+        {!isDesktop && (
+          <MobileContent
+            isLeftMenuOpen={isLeftMenuOpen}
+            setIsLeftMenuOpen={setIsLeftMenuOpen}
+            isRightMenuOpen={isRightMenuOpen}
+            setIsRightMenuOpen={setIsRightMenuOpen}
+          />
+        )}
 
-      {isDesktop && <DesktopContent />}
+        {isDesktop && <DesktopContent />}
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { useReducer } from "react";
 
 import { Color } from "colorlib";
 
-import { colorReducer, createColorActions } from "@hooks/color";
+import { colorReducer, createColorActions } from "@/hooks/color";
 
 import { HexEditor } from "./ValueEditor";
 

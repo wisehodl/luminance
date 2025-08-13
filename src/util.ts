@@ -1,5 +1,7 @@
 import type { RefObject } from "react";
 
+import { Hex } from "colorlib";
+
 import type { CartesianSpace, Range } from "./types";
 import { Direction } from "./types";
 
@@ -93,4 +95,8 @@ export function chooseValueByDirection(
 export function roundTo(value: number, decimals: number = 0) {
   const factor = Math.pow(10, decimals);
   return Math.round(value * factor) / factor;
+}
+
+export function formatCssRgb(hex: Hex) {
+  return `rgb(${hex.r},${hex.g},${hex.b})`;
 }

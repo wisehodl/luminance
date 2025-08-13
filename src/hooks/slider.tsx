@@ -12,6 +12,7 @@ import {
   valueToPosition,
 } from "@/util";
 
+import { useSmoothAnimation } from "./animation";
 import { useScroll } from "./scroll";
 
 if (typeof TouchEvent === "undefined") {
@@ -34,6 +35,7 @@ export function useSlider({
   valueRange,
   value,
   setValue,
+  invert = false,
 }: {
   direction: Direction;
   origin: CartesianSpace;
@@ -41,6 +43,7 @@ export function useSlider({
   valueRange: Range;
   value: number;
   setValue: Setter<number>;
+  invert?: boolean;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -59,6 +62,9 @@ export function useSlider({
   const [position, setPosition] = useState(0);
   const positionRef = useRef(position);
 
+  // Hooks
+  const smoothAnimation = useSmoothAnimation();
+
   useEffect(() => {
     directionRef.current = direction;
     originRef.current = origin;
@@ -67,6 +73,11 @@ export function useSlider({
       direction,
       dimensions.x,
       dimensions.y,
+    );
+    positionRef.current = valueToPosition(
+      value,
+      maxPosition.current,
+      valueRangeRef.current,
     );
   }, [direction, origin, dimensions]);
 
@@ -94,11 +105,15 @@ export function useSlider({
       0,
       chooseValueByDirection(dir, dims.x, dims.y),
     );
-    const newValue = positionToValue(
+    let newValue = positionToValue(
       newPosition,
       maxPosition.current,
       valueRangeRef.current,
     );
+
+    if (invert) {
+      newValue = valueRangeRef.current.max - newValue;
+    }
 
     setValueRef.current(newValue);
   }, []);
@@ -106,7 +121,7 @@ export function useSlider({
   const handleMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
-      calculatePosition(event);
+      smoothAnimation(() => calculatePosition(event));
     },
     [calculatePosition],
   );
@@ -154,6 +169,7 @@ export function useSlider({
       maxPosition.current,
       valueRangeRef.current,
     );
+
     setValueRef.current(newValue);
   }, []);
 
