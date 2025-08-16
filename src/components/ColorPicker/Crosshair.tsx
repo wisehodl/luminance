@@ -13,13 +13,11 @@ export function SquareCrosshair({
   luminance,
   hex,
   parentDimensions,
-  isDragging,
 }: {
   hue: number;
   luminance: number;
   hex: colorlib.Hex;
   parentDimensions: CartesianSpace;
-  isDragging: boolean;
 }) {
   const [_origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
