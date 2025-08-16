@@ -1,5 +1,4 @@
 .container {
-  padding: 40px;
   display: grid;
   grid-template-columns: 25px 1fr 25px;
   grid-template-rows: 50px 1fr 25px;
@@ -9,6 +8,14 @@
     ". bottomGrip ."
     ". bar .";
 }
+
+.preview {
+  grid-area: preview;
+  height: 25px;
+  margin-bottom: 15px;
+  border: 2px solid #7a7a7a;
+}
+
 .pickerSquare {
   grid-area: square;
   position: relative;
@@ -99,12 +106,4 @@
   position: absolute;
   width: 0;
   height: 0;
-}
-
-/* Preview */
-
-.preview {
-  grid-area: preview;
-  margin-bottom: 15px;
-  border: 2px solid #7a7a7a;
 }

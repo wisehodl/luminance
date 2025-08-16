@@ -53,6 +53,19 @@ Cypress.Commands.add("disableTransitions", () => {
       }
     `;
     document.head.appendChild(style);
+
+    // Flag to disable Framer Motion
+    if (window.framerMotionTestOverride) return;
+    window.framerMotionTestOverride = true;
+    window.originalRequestAnimationFrame = window.requestAnimationFrame;
+
+    window.requestAnimationFrame = (callback) => {
+      return window.setTimeout(() => {
+        if (callback) callback(0);
+      }, 0);
+    };
+
+    document.body.setAttribute("data-cy-animations-disabled", "true");
   });
 });
 
@@ -62,5 +75,17 @@ Cypress.Commands.add("enableTransitions", () => {
     if (styleElement) {
       styleElement.remove();
     }
+
+    // Remove flags for Framer Motion
+    if (window.framerMotionTestOverride) {
+      window.framerMotionTestOverride = false;
+
+      if (window.originalRequestAnimationFrame) {
+        window.requestAnimationFrame = window.originalRequestAnimationFrame;
+        delete window.originalRequestAnimationFrame;
+      }
+    }
+
+    document.body.removeAttribute("data-cy-animations-disabled");
   });
 });

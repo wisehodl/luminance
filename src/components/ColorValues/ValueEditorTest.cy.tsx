@@ -18,8 +18,10 @@ function TestWrapper() {
     <div
       style={{
         width: 400,
+        height: 25,
         display: "flex",
         flexDirection: "column",
+        border: "2px solid #7a7a7a",
       }}
     >
       <ValueEditor
@@ -53,7 +55,7 @@ describe("component editor tests", () => {
     cy.dataCy("R-slider")
       .click()
       .dataCy("R-slider-bar")
-      .should("have.css", "width", "140px")
+      .should("have.css", "width", "138px")
       .dataCy("R-value-input")
       .should("have.value", "127");
 
@@ -78,14 +80,14 @@ describe("component editor tests", () => {
       .type("100")
       .should("have.value", "100")
       .dataCy("R-slider-bar")
-      .should("have.css", "width", "110px");
+      .should("have.css", "width", "109px");
 
     // Scrolling input should update value
     cy.dataCy("R-value-input")
       .trigger("wheel", { deltaY: -100, eventConstructor: "WheelEvent" })
       .should("have.value", "100")
       .dataCy("R-slider-bar")
-      .should("have.css", "width", "111px")
+      .should("have.css", "width", "110px")
       .wait(50);
 
     // Test increment/decrement buttons
@@ -132,7 +134,7 @@ describe("component editor tests", () => {
     cy.dataCy("R-slider")
       .click()
       .dataCy("R-slider-bar")
-      .should("have.css", "width", "140px")
+      .should("have.css", "width", "138px")
       .dataCy("R-value-input")
       .should("have.value", "127");
 

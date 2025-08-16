@@ -1,17 +1,26 @@
 .appWrapper {
   background-color: white;
   height: 100%;
-  width: 100%;
-  max-width: 1200px;
-  overflow: hidden;
+  width: 1200px;
   margin: 0 auto;
   box-shadow: 0 0 40px #7a7a7a;
   border-left: 2px solid #7a7a7a;
   border-right: 2px solid #7a7a7a;
+  overflow: hidden;
+}
+
+.mainLayout {
+  height: 100%;
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "picker palette";
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 76px 1fr;
 }
 
 .appHeader {
-  height: 40px;
+  grid-area: header;
   display: flex;
   align-items: baseline;
   border-bottom: 2px solid #7a7a7a;
@@ -39,48 +48,36 @@
   color: #7a7a7a;
 }
 
-.mobileContent,
-.mainContent,
-.tabWrapper,
-.tabWrapper .tab {
-  height: 100%;
-}
-
-.tabWrapper {
-  /* hide scrollbar */
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.appWrapper {
-}
-
-.mobileContent {
-  display: none;
-}
-
-.mainContent {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-}
-
 .firstZone {
+  grid-area: picker;
   display: flex;
   flex-direction: column;
   border-right: 2px solid #7a7a7a;
 }
 
 .secondZone {
-  padding: 40px;
+  min-width: 0;
+  grid-area: palette;
   color: #555;
   font-style: italic;
 }
 
+.colorHistoryWrapper {
+  box-sizing: border-box;
+  border-bottom: 2px solid #7a7a7a;
+  position: relative;
+}
+
 .colorPickerWrapper {
   border-bottom: 2px solid #7a7a7a;
+  padding: 20px 40px 40px;
 }
 
 .colorValuesWrapper {
+  padding: 40px;
+}
+
+.colorHistoryWrapper {
 }
 
 .paletteEditorWrapper {

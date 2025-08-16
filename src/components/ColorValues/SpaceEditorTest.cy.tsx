@@ -20,9 +20,10 @@ function TestWrapper() {
       <div
         style={{
           width: "100%",
-          height: 300,
+          height: 275,
           display: "flex",
           flexDirection: "column",
+          gap: 16,
         }}
       >
         <SpaceEditor
@@ -44,16 +45,19 @@ function TestWrapper() {
 
       <div style={{ fontFamily: "monospace" }}>
         <p data-cy="hcl-value">
-          HCL ({roundTo(state.color.hcl.h, 0)}, {roundTo(state.color.hcl.c, 2)},{" "}
-          {roundTo(state.color.hcl.l, 2)})
+          HCL ({roundTo(state.color.hcl.h, 0, "down")},{" "}
+          {roundTo(state.color.hcl.c, 2, "down")},{" "}
+          {roundTo(state.color.hcl.l, 2, "down")})
         </p>
         <p data-cy="hsv-value">
-          HSV ({roundTo(state.color.hsv.h, 0)}, {roundTo(state.color.hsv.s, 2)},{" "}
-          {roundTo(state.color.hsv.v, 2)})
+          HSV ({roundTo(state.color.hsv.h, 0, "down")},{" "}
+          {roundTo(state.color.hsv.s, 2, "down")},{" "}
+          {roundTo(state.color.hsv.v, 2, "down")})
         </p>
         <p data-cy="rgb-value">
-          RGB ({roundTo(state.color.rgb.r, 0)}, {roundTo(state.color.rgb.g, 0)},{" "}
-          {roundTo(state.color.rgb.b, 0)})
+          RGB ({roundTo(state.color.rgb.r, 0, "down")},{" "}
+          {roundTo(state.color.rgb.g, 0, "down")},{" "}
+          {roundTo(state.color.rgb.b, 0, "down")})
         </p>
         <p data-cy="hex-value">HEX: #{state.color.hex.to_code()}</p>
       </div>
@@ -75,7 +79,7 @@ describe("space editor tests", () => {
     cy.dataCy("HSV-editor").within(() => {
       cy.dataCy("H-value-input").should("have.value", 158);
       cy.dataCy("S-value-input").should("have.value", 79);
-      cy.dataCy("V-value-input").should("have.value", 87);
+      cy.dataCy("V-value-input").should("have.value", 86);
     });
 
     cy.dataCy("HCL-editor").within(() => {
@@ -85,7 +89,7 @@ describe("space editor tests", () => {
     });
 
     cy.dataCy("rgb-value").should("have.text", "RGB (46, 221, 157)");
-    cy.dataCy("hsv-value").should("have.text", "HSV (158, 0.79, 0.87)");
+    cy.dataCy("hsv-value").should("have.text", "HSV (158, 0.79, 0.86)");
     cy.dataCy("hcl-value").should("have.text", "HCL (158, 0.79, 0.7)");
     cy.dataCy("hex-value").should("have.text", "HEX: #2EDD9D");
 
@@ -97,9 +101,9 @@ describe("space editor tests", () => {
       cy.dataCy("L-value-input").type("25");
     });
 
-    cy.dataCy("rgb-value").should("have.text", "RGB (17, 76, 75)");
-    cy.dataCy("hsv-value").should("have.text", "HSV (179, 0.78, 0.3)");
-    cy.dataCy("hcl-value").should("have.text", "HCL (179, 0.78, 0.25)");
+    cy.dataCy("rgb-value").should("have.text", "RGB (16, 75, 74)");
+    cy.dataCy("hsv-value").should("have.text", "HSV (178, 0.78, 0.29)");
+    cy.dataCy("hcl-value").should("have.text", "HCL (178, 0.78, 0.25)");
     cy.dataCy("hex-value").should("have.text", "HEX: #104B4A");
   });
 });

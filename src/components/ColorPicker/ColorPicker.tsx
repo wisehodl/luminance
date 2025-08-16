@@ -55,6 +55,7 @@ function ColorPicker({
           valueRange={lumRange}
           arrowDirection="right"
           invert={true}
+          parentDimensions={dimensions}
         />
       </div>
       <div className={styles.pickerSquare}>
@@ -62,6 +63,7 @@ function ColorPicker({
           hue={color.hcl.h}
           luminance={color.hcl.l}
           hex={color.hex}
+          parentDimensions={dimensions}
         />
         <ColorSquare
           chroma={color.hcl.c}
@@ -77,6 +79,7 @@ function ColorPicker({
           valueRange={lumRange}
           arrowDirection="left"
           invert={true}
+          parentDimensions={dimensions}
         />
       </div>
       <div className={styles.horizontalGrip}>
@@ -86,6 +89,7 @@ function ColorPicker({
           setValue={actions.hcl.setH}
           valueRange={hueRange}
           arrowDirection="up"
+          parentDimensions={dimensions}
         />
       </div>
       <div className={styles.pickerBar}>
@@ -100,6 +104,7 @@ function ColorPicker({
           chroma={color.hcl.c}
           luminance={color.hcl.l}
           hex={color.hex}
+          parentDimensions={dimensions}
         />
       </div>
     </div>

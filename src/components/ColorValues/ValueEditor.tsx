@@ -31,14 +31,14 @@ export function ValueEditor({
   value,
   setValue,
   scale = 1,
-  onKeyDown,
+  onKeyDown = null,
 }: {
   componentSymbol: string;
   valueRange: Range;
   value: number;
   setValue: Setter<number>;
   scale?: number;
-  onKeyDown?: (e: React.KeyboardEvent) => void;
+  onKeyDown?: ((e: React.KeyboardEvent) => void) | null;
 }) {
   // Set up component state
   const direction = Direction.HORIZONTAL;
@@ -162,7 +162,7 @@ function Slider({
   position: number;
   dimensions: CartesianSpace;
   componentSymbol: string;
-  onKeyDown?: (e: React.KeyboardEvent) => void;
+  onKeyDown?: ((e: React.KeyboardEvent) => void) | null;
 }) {
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -205,7 +205,7 @@ function Button({
   direction: "increase" | "decrease";
   componentSymbol: string;
   handleValueStep: (step: number) => void;
-  onKeyDown?: (e: React.KeyboardEvent) => void;
+  onKeyDown?: ((e: React.KeyboardEvent) => void) | null;
 }) {
   const isIncrease = direction === "increase";
   const label = isIncrease ? "Increase" : "Decrease";
@@ -255,7 +255,7 @@ function Value({
   componentSymbol: string;
   handleValueStep: (step: number) => void;
   scale: number;
-  onKeyDown?: (e: React.KeyboardEvent) => void;
+  onKeyDown?: ((e: React.KeyboardEvent) => void) | null;
 }) {
   const valueRef = useRef(null);
   const valueScroller = useScroll({
@@ -287,7 +287,7 @@ function Value({
       <input
         type="text"
         ref={valueRef}
-        value={Math.round(value * scale)}
+        value={Math.floor(value * scale)}
         onChange={onChange}
         className={styles.value}
         onFocus={(e) => e.target.select()}

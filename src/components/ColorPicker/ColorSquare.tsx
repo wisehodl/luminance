@@ -1,0 +1,137 @@
+import { useEffect, useRef, useState } from "react";
+
+import * as colorlib from "colorlib";
+import { memory } from "colorlib/colorlib_bg.wasm";
+
+import { useSmoothAnimation } from "@/hooks/animation";
+import type { HCLColorActions } from "@/hooks/color";
+import { useCrosshair } from "@/hooks/crosshair";
+import { useScroll } from "@/hooks/scroll";
+import { useResize } from "@/hooks/window";
+import type { CartesianSpace } from "@/types";
+import { setMeasurements } from "@/util";
+
+import styles from "./ColorPicker.module.css";
+
+function ColorSquare({
+  chroma,
+  actions,
+  parentDimensions,
+}: {
+  chroma: number;
+  actions: HCLColorActions;
+  parentDimensions: CartesianSpace;
+}) {
+  // State
+  const [colorSquare, setColorSquare] = useState<colorlib.ColorSquare | null>(
+    null,
+  );
+  const [origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
+  const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
+
+  // Refs
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Hooks
+  const smoothAnimation = useSmoothAnimation();
+
+  // Crosshair interaction
+  const { crosshairRef } = useCrosshair({
+    origin,
+    dimensions,
+    setXValue: actions.setH,
+    setYValue: actions.setL,
+    xValueRange: { min: 0, max: 359 },
+    yValueRange: { min: 0, max: 1 },
+    invertY: true,
+  });
+
+  // Handle chroma adjustment with scroll
+  const { addScrollListener } = useScroll({
+    targetRef: canvasRef,
+    onScrollUp: () => actions.setC((prev) => Math.min(1, prev + 0.01)),
+    onScrollDown: () => actions.setC((prev) => Math.max(0, prev - 0.01)),
+  });
+
+  // Update canvas when chroma changes
+  useEffect(() => {
+    if (colorSquare && canvasRef.current) {
+      smoothAnimation(() => {
+        colorSquare.fill_chroma(chroma);
+        refreshColorSquare(canvasRef.current!, colorSquare);
+      });
+    }
+  }, [chroma, colorSquare]);
+
+  // Add event listeners
+  useEffect(() => {
+    if (canvasRef.current) addScrollListener();
+  }, []);
+
+  // Get measurements
+  useEffect(() => {
+    if (containerRef.current) {
+      setMeasurements(containerRef, setOrigin, setDimensions);
+    }
+
+    return useResize(() =>
+      setMeasurements(containerRef, setOrigin, setDimensions),
+    );
+  }, [containerRef.current, parentDimensions]);
+
+  // Resize square
+  useEffect(() => {
+    if (containerRef.current && canvasRef.current && parentDimensions.x > 0) {
+      const newSize = parentDimensions.x - 54;
+      const newColorSquare = new colorlib.ColorSquare(newSize);
+
+      setColorSquare(newColorSquare);
+
+      if (newColorSquare) {
+        smoothAnimation(() => {
+          if (canvasRef.current) {
+            newColorSquare.fill_chroma(chroma);
+            refreshColorSquare(canvasRef.current, newColorSquare);
+          }
+        });
+      }
+    }
+  }, [containerRef.current, canvasRef.current, parentDimensions]);
+
+  return (
+    <div className={styles.colorSquareWrapper} ref={containerRef}>
+      <div
+        className={styles.colorSquare}
+        ref={crosshairRef}
+        style={{
+          width: colorSquare?.get_size(),
+          height: colorSquare?.get_size(),
+        }}
+      >
+        <canvas
+          ref={canvasRef}
+          width={colorSquare?.get_size()}
+          height={colorSquare?.get_size()}
+        />
+      </div>
+    </div>
+  );
+}
+
+function refreshColorSquare(
+  canvas: HTMLCanvasElement,
+  colorSquare: colorlib.ColorSquare,
+) {
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    const size = colorSquare.get_size();
+    const imageData = ctx.createImageData(size, size);
+    const pixelPointer = colorSquare.get_pixels_pointer();
+    const pixels = new Uint8Array(memory.buffer, pixelPointer, size * size * 4);
+    imageData.data.set(pixels);
+    ctx.putImageData(imageData, 0, 0);
+  }
+}
+
+export default ColorSquare;

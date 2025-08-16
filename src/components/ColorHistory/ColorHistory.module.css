@@ -1,0 +1,48 @@
+.colorHistory {
+  height: 74px;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  width: 100%;
+  padding: 5px 0px 0px;
+
+  /* Improve scrolling experience */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  scrollbar-width: thin; /* For Firefox */
+}
+
+.historyColor {
+  flex: 0 0 auto;
+  display: inline-block;
+  height: 50px;
+  width: 25px;
+  margin: 5px;
+  border: 2px solid #7a7a7a;
+  transition:
+    margin 200ms,
+    height 200ms,
+    width 200ms;
+  cursor: pointer;
+}
+
+.historyColor:hover {
+  height: 56px;
+  width: 31px;
+  margin: 2px;
+}
+
+.historyColor:first-of-type:hover {
+  margin-left: 12px;
+}
+
+.historyColor:first-of-type {
+  margin-left: 15px;
+}
+
+.historyColor:last-of-type:hover {
+  margin-right: 12px;
+}
+
+.historyColor:last-of-type {
+  margin-right: 15px;
+}

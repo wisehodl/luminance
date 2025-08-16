@@ -3,6 +3,7 @@ import { useState } from "react";
 import clsx from "clsx";
 import { Color } from "colorlib";
 
+import ColorHistory from "@/components/ColorHistory/ColorHistory";
 import ColorPicker from "@/components/ColorPicker/ColorPicker";
 import ColorValues from "@/components/ColorValues/ColorValues";
 import { LeftMenu, RightMenu } from "@/components/SideMenu";
@@ -193,10 +194,6 @@ function MobileContent({
 
 // Desktop Layout Components
 
-function TitleZone() {
-  return <section className={styles.TitleZone}></section>;
-}
-
 function FirstZone() {
   const { selectedColor, selectedColorActions } = useSelectedColor();
 
@@ -205,7 +202,6 @@ function FirstZone() {
       <div className={styles.colorPickerWrapper} aria-label="Color picker">
         <ColorPicker color={selectedColor} actions={selectedColorActions} />
       </div>
-
       <div className={styles.colorValuesWrapper} aria-label="Color values">
         <ColorValues color={selectedColor} actions={selectedColorActions} />
       </div>
@@ -214,9 +210,17 @@ function FirstZone() {
 }
 
 function SecondZone() {
+  const { selectedColor, selectedColorActions } = useSelectedColor();
+
   return (
     <section className={styles.secondZone} aria-label="Palette tools">
-      Palette Creator Coming Soon.
+      <div className={styles.colorHistoryWrapper} aria-label="Color History">
+        <ColorHistory
+          color={selectedColor}
+          setColor={selectedColorActions.common.setColor}
+          disabled={false}
+        />
+      </div>
       <div
         className={styles.paletteEditorWrapper}
         aria-label="Palette editor"
@@ -231,16 +235,14 @@ function SecondZone() {
 
 function DesktopContent() {
   return (
-    <>
+    <div className={styles.mainLayout}>
       <header className={styles.appHeader}>
         <span className={styles.title}>LUMINANCE</span>
         <span className={styles.subtitle}>A color picker for humans.</span>
       </header>
-      <main className={styles.mainContent}>
-        <FirstZone />
-        <SecondZone />
-      </main>
-    </>
+      <FirstZone />
+      <SecondZone />
+    </div>
   );
 }
 
