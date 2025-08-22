@@ -7,7 +7,7 @@
 //! Example:
 //!
 //! ```
-//! use color::Color;
+//! use colorlib::Color;
 //!
 //! let color = Color::from_hex("F00");
 //! ```
@@ -55,7 +55,7 @@ pub enum Component {
 /// # Example:
 ///
 /// ```
-/// use color::Color;
+/// use colorlib::Color;
 ///
 /// let red = Color::from_hex("F00");
 /// ```
@@ -77,7 +77,7 @@ impl Color {
     /// # Example:
     ///
     /// ```
-    /// use color::Color;
+    /// use colorlib::Color;
     ///
     /// let red = Color::from_hex("FF0000");
     /// ```
@@ -94,7 +94,7 @@ impl Color {
     /// # Example:
     ///
     /// ```
-    /// use color::Color;
+    /// use colorlib::Color;
     ///
     /// let red = Color::from_rgb(255.0, 0.0, 0.0);
     /// ```
@@ -111,7 +111,7 @@ impl Color {
     /// # Example:
     ///
     /// ```
-    /// use color::Color;
+    /// use colorlib::Color;
     ///
     /// let red = Color::from_hsv(0.0, 1.0, 1.0);
     /// ```
@@ -128,7 +128,7 @@ impl Color {
     /// # Example:
     ///
     /// ```
-    /// use color::Color;
+    /// use colorlib::Color;
     ///
     /// let red = Color::from_hcl(0.0, 1.0, 0.55);
     /// ```
@@ -252,7 +252,8 @@ mod tests {
         fn color_from_hcl() {
             let hex_code = "4B964B";
             let (hr, hg, hb) = (75u8, 150u8, 75u8);
-            let (r, g, b) = (75.19744022437494, 150.3948804487499, 75.19744022437494);
+            let (r, g, b) =
+                (75.19744022437494, 150.3948804487499, 75.19744022437494);
             let (h1, s, v) = (120.0, 0.5, 0.5897838448970584);
             let (h2, c, l) = (120.0, 0.5, 0.49);
 

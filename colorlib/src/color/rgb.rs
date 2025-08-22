@@ -14,7 +14,7 @@ use wasm_bindgen::prelude::*;
 /// # Example:
 ///
 /// ```
-/// use color::rgb::RGB;
+/// use colorlib::rgb::RGB;
 ///
 /// let red = RGB::new(255.0, 0.0, 0.0);
 /// ```
@@ -33,7 +33,7 @@ impl RGB {
     /// # Example:
     ///
     /// ```
-    /// use color::rgb::RGB;
+    /// use colorlib::rgb::RGB;
     ///
     /// let red = RGB::new(255.0, 0.0, 0.0);
     /// ```
@@ -49,7 +49,7 @@ impl RGB {
     /// # Example:
     ///
     /// ```
-    /// use color::rgb::RGB;
+    /// use colorlib::rgb::RGB;
     ///
     /// let red = RGB::from_hex("FF0000");
     /// ```
@@ -64,7 +64,7 @@ impl RGB {
     /// # Example:
     ///
     /// ```
-    /// use color::rgb::RGB;
+    /// use colorlib::rgb::RGB;
     ///
     /// let red = RGB::from_hsv(0.0, 1.0, 1.0);
     /// ```
@@ -85,7 +85,7 @@ impl RGB {
     /// # Example:
     ///
     /// ```
-    /// use color::rgb::RGB;
+    /// use colorlib::rgb::RGB;
     ///
     /// let red = RGB::from_hcl(0.0, 1.0, 0.55);
     /// ```

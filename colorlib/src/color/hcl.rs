@@ -13,7 +13,7 @@ use wasm_bindgen::prelude::*;
 /// # Example:
 ///
 /// ```
-/// use color::hcl::HCL;
+/// use colorlib::hcl::HCL;
 ///
 /// let red = HCL::new(0.0, 1.0, 0.55);
 /// ```
@@ -32,7 +32,7 @@ impl HCL {
     /// # Example:
     ///
     /// ```
-    /// use color::hcl::HCL;
+    /// use colorlib::hcl::HCL;
     ///
     /// let red = HCL::new(0.0, 1.0, 0.55);
     /// ```
@@ -48,7 +48,7 @@ impl HCL {
     /// # Example:
     ///
     /// ```
-    /// use color::hcl::HCL;
+    /// use colorlib::hcl::HCL;
     ///
     /// let red = HCL::from_hex("FF0000");
     /// ```
@@ -62,7 +62,7 @@ impl HCL {
     /// # Example:
     ///
     /// ```
-    /// use color::hcl::HCL;
+    /// use colorlib::hcl::HCL;
     ///
     /// let red = HCL::from_rgb(255.0, 0.0, 0.0);
     /// ```
@@ -76,7 +76,7 @@ impl HCL {
     /// # Example:
     ///
     /// ```
-    /// use color::hcl::HCL;
+    /// use colorlib::hcl::HCL;
     ///
     /// let red = HCL::from_hsv(0.0, 1.0, 0.55);
     /// ```
@@ -185,7 +185,15 @@ mod tests {
             0.864996,
             0.521301
         );
-        from_hsv!(from_hsv_dark_magenta, 300.0, 0.9, 0.5, 300.0, 0.9, 0.323601);
+        from_hsv!(
+            from_hsv_dark_magenta,
+            300.0,
+            0.9,
+            0.5,
+            300.0,
+            0.9,
+            0.323601
+        );
         from_hsv!(
             from_hsv_light_magenta,
             300.0,

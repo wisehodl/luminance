@@ -13,7 +13,7 @@ use wasm_bindgen::prelude::*;
 /// # Example:
 ///
 /// ```
-/// use color::hex::Hex;
+/// use colorlib::hex::Hex;
 ///
 /// let red = Hex::new(255.0, 0.0, 0.0);
 /// ```
@@ -32,7 +32,7 @@ impl Hex {
     /// # Example:
     ///
     /// ```
-    /// use color::hex::Hex;
+    /// use colorlib::hex::Hex;
     ///
     /// let red = Hex::new(255.0, 0.0, 0.0);
     /// ```
@@ -46,7 +46,7 @@ impl Hex {
     /// # Example:
     ///
     /// ```
-    /// use color::hex::Hex;
+    /// use colorlib::hex::Hex;
     ///
     /// let red = Hex::new_int(255, 0, 0);
     /// ```
@@ -59,7 +59,7 @@ impl Hex {
     /// # Example:
     ///
     /// ```
-    /// use color::hex::Hex;
+    /// use colorlib::hex::Hex;
     ///
     /// let red = Hex::from_rgb(255.0, 0.0, 0.0);
     /// ```
@@ -72,7 +72,7 @@ impl Hex {
     /// # Example:
     ///
     /// ```
-    /// use color::hex::Hex;
+    /// use colorlib::hex::Hex;
     ///
     /// let red = Hex::from_hsv(0.0, 1.0, 1.0);
     /// ```
@@ -86,7 +86,7 @@ impl Hex {
     /// # Example:
     ///
     /// ```
-    /// use color::hex::Hex;
+    /// use colorlib::hex::Hex;
     ///
     /// let red = Hex::from_hcl(0.0, 1.0, 0.55);
     /// ```
@@ -100,7 +100,7 @@ impl Hex {
     /// # Example:
     ///
     /// ```
-    /// use color::hex::Hex;
+    /// use colorlib::hex::Hex;
     ///
     /// let red = Hex::new_int(255, 0, 0);
     /// assert_eq!(red.to_code(), String::from("FF0000"));
@@ -114,7 +114,7 @@ impl Hex {
     /// # Example:
     ///
     /// ```
-    /// use color::hex::Hex;
+    /// use colorlib::hex::Hex;
     ///
     /// let red = Hex::from_code("FF0000");
     /// let green = Hex::from_code("0F0");

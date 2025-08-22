@@ -13,7 +13,7 @@ use wasm_bindgen::prelude::*;
 /// # Example:
 ///
 /// ```
-/// use color::hsv::HSV;
+/// use colorlib::hsv::HSV;
 ///
 /// let red = HSV::new(0.0, 1.0, 1.0);
 /// ```
@@ -32,7 +32,7 @@ impl HSV {
     /// # Example:
     ///
     /// ```
-    /// use color::hsv::HSV;
+    /// use colorlib::hsv::HSV;
     ///
     /// let red = HSV::new(0.0, 1.0, 1.0);
     /// ```
@@ -48,7 +48,7 @@ impl HSV {
     /// # Example:
     ///
     /// ```
-    /// use color::hsv::HSV;
+    /// use colorlib::hsv::HSV;
     ///
     /// let red = HSV::from_hex("FF0000");
     /// ```
@@ -62,7 +62,7 @@ impl HSV {
     /// # Example:
     ///
     /// ```
-    /// use color::hsv::HSV;
+    /// use colorlib::hsv::HSV;
     ///
     /// let red = HSV::from_rgb(255.0, 0.0, 0.0);
     /// ```
@@ -105,7 +105,7 @@ impl HSV {
     /// # Example:
     ///
     /// ```
-    /// use color::hsv::HSV;
+    /// use colorlib::hsv::HSV;
     ///
     /// let red = HSV::from_hcl(0.0, 1.0, 0.55);
     /// ```
