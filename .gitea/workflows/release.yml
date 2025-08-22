@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ssh-key: '${{ secrets.SSH_PRIVATE_KEY }}'
+          ssh-known-hosts: '${{ secrets.SSH_KNOWN_HOST }}'
+
+      # Install Cypress dependencies
+      - name: Install Cypress dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk2.0-0t64 libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb
+
+      # Install node.js
+      - name: Install node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      # Install rust
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          echo "PATH=$HOME/.cargo/bin:$PATH" >> $GITHUB_ENV
+
+      # Install wasm-pack
+      - name: Install wasm-pack
+        run: |
+          npm install -g wasm-pack
+          wasm-pack --version
+
+      # Install go
+      - name: Install go
+        uses: https://github.com/actions/setup-go@v3
+        with:
+          go-version: '>=1.20.1'
+
+      # Install app dependencies
+      - name: Install app dependencies
+        run: npm install
+
+      # Test wasm library
+      - name: Test wasm library
+        run: |
+          npm run test:wasm
+          npm run test:wasmdoc
+
+      # Build wasm library
+      - name: Build wasm library
+        run: npm run build:wasm
+
+      # Test application
+      - name: Test application
+        run: |
+          npm test
+          npx cypress run --component
+
+      # Build application
+      - name: Build application
+        run: npm run build
+
+      # Get repository info
+      - name: Get repository and tag info
+        run: |
+          echo "REPO_NAME=$(basename $GITHUB_REPOSITORY)" >> $GITHUB_ENV
+          echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      # Create archive
+      - name: Create archive
+        run: tar -czvf ${{ env.REPO_NAME }}-${{ env.TAG_NAME }}.tar.gz dist VERSION
+
+      # Create release
+      - name: Create Release
+        uses: https://gitea.com/actions/release-action@main
+        with:
+          files: |-
+            ${{ env.REPO_NAME }}-${{ env.TAG_NAME }}.tar.gz
+          api_key: '${{ secrets.RELEASE_TOKEN }}'
+          title: 'Release ${{ env.TAG_NAME }}'
