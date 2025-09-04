@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { motion } from "motion/react";
 
 import { useDragAndDrop } from "../dragAndDrop";
-import styles from "./dragAndDropTest.module.css";
+import styles from "./dragAndDrop.test.module.css";
 
 type Item = {
   id: string;
