@@ -7,15 +7,17 @@
     "build:wasm": "wasm-pack build colorlib -t bundler -d pkg --release",
     "check": "tsc --noEmit -p tsconfig.app.json",
     "clean": "rm -rf dist colorlib/pkg*",
-    "cypress:open": "1>/dev/null 2>/dev/null cypress open -d &",
+    "cypress": "1>/dev/null 2>/dev/null cypress open -d &",
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview",
     "test:wasm": "cargo test --lib --manifest-path colorlib/Cargo.toml",
     "test:wasmdoc": "cargo test --doc --manifest-path colorlib/Cargo.toml",
     "test": "vitest",
-    "test:component:chrome": "cypress run --component -b chromium",
-    "test:component:fire": "cypress run --component -b firefox"
+    "test:component": "cypress run --component -b chromium",
+    "test:component:fire": "cypress run --component -b firefox",
+    "test:e2e": "cypress run --e2e -b chromium",
+    "test:e2e:firefox": "cypress run --e2e -b firefox"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.0.0",
