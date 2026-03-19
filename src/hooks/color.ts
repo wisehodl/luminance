@@ -24,34 +24,34 @@ export function colorReducer(
   state: ColorState,
   action: ColorAction,
 ): ColorState {
-  let comp;
+  let comp, rgb, hsv, hcl, hex, valOrFn, prev;
 
   switch (action.type) {
     case "SET_COLOR":
       return { ...state, color: action.payload };
 
     case "SET_RGB":
-      let rgb = action.payload;
+      rgb = action.payload;
       return { ...state, color: colorlib.Color.from_rgb(rgb.r, rgb.g, rgb.b) };
 
     case "SET_HSV":
-      let hsv = action.payload;
+      hsv = action.payload;
       return { ...state, color: colorlib.Color.from_hsv(hsv.h, hsv.s, hsv.v) };
 
     case "SET_HCL":
-      let hcl = action.payload;
+      hcl = action.payload;
       return { ...state, color: colorlib.Color.from_hcl(hcl.h, hcl.c, hcl.l) };
 
     case "SET_HEX":
-      let hex = action.payload;
+      hex = action.payload;
       return { ...state, color: colorlib.Color.from_hex(hex.to_code()) };
 
     case "SET_VALUE":
       comp = action.component;
-      let valOrFn = action.payload;
+      valOrFn = action.payload;
 
       if (typeof valOrFn === "function") {
-        let prev = state.color.get(comp);
+        prev = state.color.get(comp);
         return { ...state, color: state.color.update(comp, valOrFn(prev)) };
       } else {
         return { ...state, color: state.color.update(comp, valOrFn) };

@@ -93,6 +93,21 @@ impl RGB {
         let hsv = HSV::from_hcl(h, c, l);
         RGB::from_hsv(hsv.h, hsv.s, hsv.v)
     }
+
+    /// Checks if two RGB colors are equal
+    ///
+    /// # Example:
+    ///
+    /// ```
+    /// use colorlib::rgb::RGB;
+    ///
+    /// let rgb1 = RGB::new(255.0, 0.0, 0.0);
+    /// let rgb2 = RGB::new(255.0, 0.0, 0.0);
+    /// assert!(rgb1.equals(&rgb2));
+    /// ```
+    pub fn equals(&self, other: &RGB) -> bool {
+        self == other
+    }
 }
 
 #[cfg(test)]

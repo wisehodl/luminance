@@ -138,6 +138,21 @@ impl Hex {
             b: decoded[2],
         }
     }
+
+    /// Checks if two Hex colors are equal
+    ///
+    /// # Example:
+    ///
+    /// ```
+    /// use colorlib::hex::Hex;
+    ///
+    /// let hex1 = Hex::from_code("FF0000");
+    /// let hex2 = Hex::from_code("FF0000");
+    /// assert!(hex1.equals(&hex2));
+    /// ```
+    pub fn equals(&self, other: &Hex) -> bool {
+        self == other
+    }
 }
 
 #[cfg(test)]

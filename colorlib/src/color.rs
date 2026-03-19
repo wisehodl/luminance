@@ -167,6 +167,21 @@ impl Color {
             Component::HCL_L => Color::from_hcl(self.hcl.h, self.hcl.c, value),
         }
     }
+
+    /// Checks if two Color objects are equal
+    ///
+    /// # Example:
+    ///
+    /// ```
+    /// use colorlib::Color;
+    ///
+    /// let color1 = Color::from_hex("FF0000");
+    /// let color2 = Color::from_hex("FF0000");
+    /// assert!(color1.equals(&color2));
+    /// ```
+    pub fn equals(&self, other: &Color) -> bool {
+        self == other
+    }
 }
 
 #[cfg(test)]
@@ -252,8 +267,7 @@ mod tests {
         fn color_from_hcl() {
             let hex_code = "4B964B";
             let (hr, hg, hb) = (75u8, 150u8, 75u8);
-            let (r, g, b) =
-                (75.19744022437494, 150.3948804487499, 75.19744022437494);
+            let (r, g, b) = (75.19744022437494, 150.3948804487499, 75.19744022437494);
             let (h1, s, v) = (120.0, 0.5, 0.5897838448970584);
             let (h2, c, l) = (120.0, 0.5, 0.49);
 

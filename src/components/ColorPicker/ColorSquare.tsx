@@ -7,7 +7,7 @@ import { useSmoothAnimation } from "@/hooks/animation";
 import type { HCLColorActions } from "@/hooks/color";
 import { useCrosshair } from "@/hooks/crosshair";
 import { useScroll } from "@/hooks/scroll";
-import { useResize } from "@/hooks/window";
+import { onResize } from "@/hooks/window";
 import type { CartesianSpace } from "@/types";
 import { setMeasurements } from "@/util";
 
@@ -62,12 +62,12 @@ function ColorSquare({
         refreshColorSquare(canvasRef.current!, colorSquare);
       });
     }
-  }, [chroma, colorSquare]);
+  }, [chroma, colorSquare, smoothAnimation]);
 
   // Add event listeners
   useEffect(() => {
     if (canvasRef.current) addScrollListener();
-  }, []);
+  }, [addScrollListener]);
 
   // Get measurements
   useEffect(() => {
@@ -75,10 +75,10 @@ function ColorSquare({
       setMeasurements(containerRef, setOrigin, setDimensions);
     }
 
-    return useResize(() =>
+    return onResize(() =>
       setMeasurements(containerRef, setOrigin, setDimensions),
     );
-  }, [containerRef.current, parentDimensions]);
+  }, [containerRef, parentDimensions]);
 
   // Resize square
   useEffect(() => {
@@ -97,7 +97,7 @@ function ColorSquare({
         });
       }
     }
-  }, [containerRef.current, canvasRef.current, parentDimensions]);
+  }, [containerRef, canvasRef, parentDimensions, chroma, smoothAnimation]);
 
   return (
     <div className={styles.colorSquareWrapper} ref={containerRef}>

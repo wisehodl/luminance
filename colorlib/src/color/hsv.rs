@@ -114,6 +114,21 @@ impl HSV {
         let v = calc::value(h, s, l);
         HSV::new(h, s, v)
     }
+
+    /// Checks if two HSV colors are equal
+    ///
+    /// # Example:
+    ///
+    /// ```
+    /// use colorlib::hsv::HSV;
+    ///
+    /// let hsv1 = HSV::new(0.0, 1.0, 1.0);
+    /// let hsv2 = HSV::new(0.0, 1.0, 1.0);
+    /// assert!(hsv1.equals(&hsv2));
+    /// ```
+    pub fn equals(&self, other: &HSV) -> bool {
+        self == other
+    }
 }
 
 #[cfg(test)]

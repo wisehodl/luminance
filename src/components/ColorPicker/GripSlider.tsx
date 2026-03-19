@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import type { Setter } from "@/hooks/color";
 import { useSlider } from "@/hooks/slider";
-import { useResize } from "@/hooks/window";
+import { onResize } from "@/hooks/window";
 import { Direction } from "@/types";
 import type { CartesianSpace, Range } from "@/types";
 import {
@@ -49,10 +49,8 @@ function GripSlider({
       setMeasurements(sliderRef, setOrigin, setDimensions);
     }
 
-    return useResize(() =>
-      setMeasurements(sliderRef, setOrigin, setDimensions),
-    );
-  }, [sliderRef.current, parentDimensions]);
+    return onResize(() => setMeasurements(sliderRef, setOrigin, setDimensions));
+  }, [sliderRef, parentDimensions]);
 
   const upArrowStyle = {
     borderLeft: "12px solid transparent",

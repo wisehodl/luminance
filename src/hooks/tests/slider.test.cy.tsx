@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { CartesianSpace } from "@/types";
 import { Direction } from "@/types";
@@ -17,7 +17,7 @@ function TestSlider({
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [value, setValue] = useState(0);
   const [position, setPosition] = useState(0);
-  const valueRange = { min: 0, max: 100 };
+  const valueRange = useMemo(() => ({ min: 0, max: 100 }), []);
   const { sliderRef, isDragging } = useSlider({
     direction,
     origin,
@@ -51,7 +51,7 @@ function TestSlider({
     } else {
       setValue(0);
     }
-  }, [dimensions, direction]);
+  }, [dimensions, direction, position]);
 
   useEffect(() => {
     const maxPosition = chooseValueByDirection(

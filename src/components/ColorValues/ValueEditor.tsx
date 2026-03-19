@@ -1,19 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, KeyboardEvent, RefObject } from "react";
 
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import clsx from "clsx";
 import * as colorlib from "colorlib";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import type { HexColorActions } from "@/hooks/color";
 import { useScroll } from "@/hooks/scroll";
 import { useSlider } from "@/hooks/slider";
-import { useResize } from "@/hooks/window";
+import { onResize } from "@/hooks/window";
 import type { CartesianSpace, Range, Setter, Timeout } from "@/types";
 import { Direction } from "@/types";
 import { minmax, roundTo, setMeasurements, valueToPosition } from "@/util";
@@ -89,9 +84,7 @@ export function ValueEditor({
   // Set component dimensions for slider hook
   useEffect(() => {
     setMeasurements(sliderRef, setOrigin, setDimensions);
-    return useResize(() =>
-      setMeasurements(sliderRef, setOrigin, setDimensions),
-    );
+    return onResize(() => setMeasurements(sliderRef, setOrigin, setDimensions));
   }, [sliderRef, setOrigin, setDimensions]);
 
   return (
@@ -209,7 +202,7 @@ function Button({
 }) {
   const isIncrease = direction === "increase";
   const label = isIncrease ? "Increase" : "Decrease";
-  const icon = isIncrease ? faChevronRight : faChevronLeft;
+  const Icon = isIncrease ? ChevronRight : ChevronLeft;
   const dataCy = `${componentSymbol}-${isIncrease ? "increment" : "decrement"}-button`;
 
   const step = isIncrease ? 1 : -1;
@@ -234,7 +227,7 @@ function Button({
         data-cy={dataCy}
         onKeyDown={handleKeyDown}
       >
-        <FontAwesomeIcon icon={icon} transform="shrink-2 down-1" />
+        <Icon size={18} />
       </button>
     </div>
   );
@@ -338,8 +331,8 @@ function useLongPressRepeat(
     onMouseLeave: stop,
     onTouchStart: start,
     onTouchEnd: stop,
-    // Intentional 'any' to avoid overly complex typing
-    onContextMenu: (e: Event | any) => e.preventDefault(),
+    // @ts-expect-error: Avoid overly complex typing
+    onContextMenu: (e) => e.preventDefault(),
   };
 }
 
@@ -385,7 +378,7 @@ export function HexEditor({
 
   useEffect(() => {
     setInputValue(formatHexString(color, isShortHex));
-  }, [color]);
+  }, [color, isShortHex]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

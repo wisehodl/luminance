@@ -85,6 +85,21 @@ impl HCL {
         let c = calc::chroma(h, s, l);
         HCL::new(h, c, l)
     }
+
+    /// Checks if two HCL colors are equal
+    ///
+    /// # Example:
+    ///
+    /// ```
+    /// use colorlib::hcl::HCL;
+    ///
+    /// let hcl1 = HCL::new(0.0, 1.0, 0.55);
+    /// let hcl2 = HCL::new(0.0, 1.0, 0.55);
+    /// assert!(hcl1.equals(&hcl2));
+    /// ```
+    pub fn equals(&self, other: &HCL) -> bool {
+        self == other
+    }
 }
 
 #[cfg(test)]
@@ -185,15 +200,7 @@ mod tests {
             0.864996,
             0.521301
         );
-        from_hsv!(
-            from_hsv_dark_magenta,
-            300.0,
-            0.9,
-            0.5,
-            300.0,
-            0.9,
-            0.323601
-        );
+        from_hsv!(from_hsv_dark_magenta, 300.0, 0.9, 0.5, 300.0, 0.9, 0.323601);
         from_hsv!(
             from_hsv_light_magenta,
             300.0,

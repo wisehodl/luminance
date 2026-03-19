@@ -16,7 +16,7 @@ import { useSmoothAnimation } from "./animation";
 import { useScroll } from "./scroll";
 
 if (typeof TouchEvent === "undefined") {
-  // @ts-ignore - intentionally creating global
+  // @ts-expect-error - intentionally creating global
   window.TouchEvent = window.MouseEvent;
 }
 
@@ -79,11 +79,11 @@ export function useSlider({
       maxPosition.current,
       valueRangeRef.current,
     );
-  }, [direction, origin, dimensions]);
+  }, [direction, origin, dimensions, value]);
 
   useEffect(() => {
     valueRangeRef.current = valueRange;
-  }, [valueRangeRef]);
+  }, [valueRange, valueRangeRef]);
 
   useEffect(() => {
     setValueRef.current = setValue;
@@ -94,36 +94,39 @@ export function useSlider({
   }, [position]);
 
   // Setup drag handlers
-  const calculatePosition = useCallback((event: MouseEvent | TouchEvent) => {
-    const dir = directionRef.current;
-    const orig = originRef.current;
-    const dims = dimensionsRef.current;
+  const calculatePosition = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      const dir = directionRef.current;
+      const orig = originRef.current;
+      const dims = dimensionsRef.current;
 
-    const clientCoord = extractEventCoordinateByDirection(event, dir);
-    const newPosition = minmax(
-      clientCoord - chooseValueByDirection(dir, orig.x, orig.y),
-      0,
-      chooseValueByDirection(dir, dims.x, dims.y),
-    );
-    let newValue = positionToValue(
-      newPosition,
-      maxPosition.current,
-      valueRangeRef.current,
-    );
+      const clientCoord = extractEventCoordinateByDirection(event, dir);
+      const newPosition = minmax(
+        clientCoord - chooseValueByDirection(dir, orig.x, orig.y),
+        0,
+        chooseValueByDirection(dir, dims.x, dims.y),
+      );
+      let newValue = positionToValue(
+        newPosition,
+        maxPosition.current,
+        valueRangeRef.current,
+      );
 
-    if (invert) {
-      newValue = valueRangeRef.current.max - newValue;
-    }
+      if (invert) {
+        newValue = valueRangeRef.current.max - newValue;
+      }
 
-    setValueRef.current(newValue);
-  }, []);
+      setValueRef.current(newValue);
+    },
+    [invert],
+  );
 
   const handleMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
       smoothAnimation(() => calculatePosition(event));
     },
-    [calculatePosition],
+    [calculatePosition, smoothAnimation],
   );
 
   const handleEnd = useCallback(() => {

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import * as colorlib from "colorlib";
 
 import type { ColorActions } from "@/hooks/color";
-import { useResize } from "@/hooks/window";
+import { onResize } from "@/hooks/window";
 import { Direction } from "@/types";
 import type { CartesianSpace } from "@/types";
 import { formatCssRgb, setMeasurements } from "@/util";
@@ -25,7 +25,7 @@ function ColorPicker({
   const hueRange = { min: 0, max: 359 };
   const lumRange = { min: 0, max: 1 };
 
-  const [_origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
+  const [, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
 
   // Get measurements
@@ -34,10 +34,10 @@ function ColorPicker({
       setMeasurements(containerRef, setOrigin, setDimensions);
     }
 
-    return useResize(() => {
+    return onResize(() => {
       setMeasurements(containerRef, setOrigin, setDimensions);
     });
-  }, [containerRef.current]);
+  }, []);
 
   return (
     <div className={styles.container} ref={containerRef}>

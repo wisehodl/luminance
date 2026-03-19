@@ -12,7 +12,7 @@ import {
 import { useSmoothAnimation } from "./animation";
 
 if (typeof TouchEvent === "undefined") {
-  // @ts-ignore - intentionally creating global
+  // @ts-expect-error - intentionally creating global
   window.TouchEvent = window.MouseEvent;
 }
 
@@ -61,37 +61,40 @@ export function useCrosshair({
     yValueRangeRef.current = yValueRange;
   }, [xValueRange, yValueRange]);
 
-  const calculatePositions = useCallback((event: MouseEvent | TouchEvent) => {
-    const orig = originRef.current;
-    const dims = dimensionsRef.current;
-    const xRange = xValueRangeRef.current;
-    const yRange = yValueRangeRef.current;
+  const calculatePositions = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      const orig = originRef.current;
+      const dims = dimensionsRef.current;
+      const xRange = xValueRangeRef.current;
+      const yRange = yValueRangeRef.current;
 
-    const { clientX, clientY } = extractEventCoordinates(event);
+      const { clientX, clientY } = extractEventCoordinates(event);
 
-    const xPos = minmax(clientX - orig.x, 0, dims.x - 1);
-    const yPos = minmax(clientY - orig.y, 0, dims.y - 1);
-    let newXValue = positionToValue(xPos, dims.x - 1, xRange);
-    let newYValue = positionToValue(yPos, dims.y - 1, yRange);
+      const xPos = minmax(clientX - orig.x, 0, dims.x - 1);
+      const yPos = minmax(clientY - orig.y, 0, dims.y - 1);
+      let newXValue = positionToValue(xPos, dims.x - 1, xRange);
+      let newYValue = positionToValue(yPos, dims.y - 1, yRange);
 
-    if (invertX) {
-      newXValue = xRange.max - newXValue;
-    }
+      if (invertX) {
+        newXValue = xRange.max - newXValue;
+      }
 
-    if (invertY) {
-      newYValue = yRange.max - newYValue;
-    }
+      if (invertY) {
+        newYValue = yRange.max - newYValue;
+      }
 
-    setXValueRef.current(newXValue);
-    setYValueRef.current(newYValue);
-  }, []);
+      setXValueRef.current(newXValue);
+      setYValueRef.current(newYValue);
+    },
+    [invertX, invertY],
+  );
 
   const handleMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
       smoothAnimation(() => calculatePositions(event));
     },
-    [calculatePositions],
+    [calculatePositions, smoothAnimation],
   );
 
   const handleEnd = useCallback(

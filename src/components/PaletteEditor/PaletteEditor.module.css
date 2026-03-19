@@ -1,16 +1,37 @@
-/* Large - Landscape Tablets / Desktops */
-/* Medium - Portrait Tablets */
-/* Horizontal layout, vertically scrolling picker and palette content */
-@media (min-width: 992px),
-  (min-width: 568px) and (max-width: 991px) and (orientation: portrait) {
+.paletteEditor {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Medium - Landscape Phones */
-/* Horizontal layout, side menu, vertical tabbed picker */
-@media (min-width: 568px) and (max-width: 991px) and (orientation: landscape) {
+.actionBar {
+  height: 40px;
 }
 
-/* Small - Portrait Phones*/
-/* Vertical layout, side menu, horizontal tabbed picker */
-@media (max-width: 567px) {
+.cardWrapper {
+  flex: 1;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 4fr;
+  grid-template-rows: 40px 1fr;
+  grid-template-areas:
+    ". . card-header"
+    "preview selection palette";
+}
+
+.cardHeader {
+  grid-area: card-header;
+}
+
+.pickerColor {
+  grid-area: preview;
+}
+
+.paletteColor {
+  grid-area: selection;
+}
+
+.palette {
+  grid-area: palette;
 }

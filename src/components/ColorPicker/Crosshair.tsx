@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import * as colorlib from "colorlib";
 
-import { useResize } from "@/hooks/window";
+import { onResize } from "@/hooks/window";
 import type { CartesianSpace } from "@/types";
 import { formatCssRgb, setMeasurements, valueToPosition } from "@/util";
 
@@ -19,7 +19,7 @@ export function SquareCrosshair({
   hex: colorlib.Hex;
   parentDimensions: CartesianSpace;
 }) {
-  const [_origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
+  const [, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [darkCrosshairs, setDarkCrosshairs] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -32,10 +32,10 @@ export function SquareCrosshair({
 
   useEffect(() => {
     setMeasurements(containerRef, setOrigin, setDimensions);
-    return useResize(() =>
+    return onResize(() =>
       setMeasurements(containerRef, setOrigin, setDimensions),
     );
-  }, [containerRef.current, parentDimensions]);
+  }, [containerRef, parentDimensions]);
 
   return (
     <div className={styles.crosshairWrapper} ref={containerRef}>
@@ -86,7 +86,7 @@ export function BarCrosshair({
   hex: colorlib.Hex;
   parentDimensions: CartesianSpace;
 }) {
-  const [_origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
+  const [, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [darkCrosshairs, setDarkCrosshairs] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -98,10 +98,10 @@ export function BarCrosshair({
 
   useEffect(() => {
     setMeasurements(containerRef, setOrigin, setDimensions);
-    return useResize(() =>
+    return onResize(() =>
       setMeasurements(containerRef, setOrigin, setDimensions),
     );
-  }, [containerRef.current, parentDimensions]);
+  }, [containerRef, parentDimensions]);
 
   return (
     <div className={styles.crosshairWrapper} ref={containerRef}>

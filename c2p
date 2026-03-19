@@ -1,0 +1,1 @@
+code2prompt -c -e package-lock.json -e example.json -e "colorlib/*"

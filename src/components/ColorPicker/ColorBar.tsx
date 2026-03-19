@@ -6,7 +6,7 @@ import { memory } from "colorlib/colorlib_bg.wasm";
 import { useSmoothAnimation } from "@/hooks/animation";
 import type { Setter } from "@/hooks/color";
 import { useSlider } from "@/hooks/slider";
-import { useResize } from "@/hooks/window";
+import { onResize } from "@/hooks/window";
 import type { CartesianSpace } from "@/types";
 import { Direction } from "@/types";
 import { setMeasurements } from "@/util";
@@ -56,7 +56,7 @@ function ColorBar({
         refreshColorBar(canvasRef.current!, colorBar);
       });
     }
-  }, [hue, luminance, colorBar]);
+  }, [hue, luminance, colorBar, smoothAnimation]);
 
   // Get measurements
   useEffect(() => {
@@ -64,10 +64,10 @@ function ColorBar({
       setMeasurements(containerRef, setOrigin, setDimensions);
     }
 
-    return useResize(() =>
+    return onResize(() =>
       setMeasurements(containerRef, setOrigin, setDimensions),
     );
-  }, [containerRef.current]);
+  }, [containerRef]);
 
   // Resize color bar
   useEffect(() => {
@@ -87,7 +87,14 @@ function ColorBar({
         });
       }
     }
-  }, [containerRef.current, canvasRef.current, parentDimensions]);
+  }, [
+    containerRef,
+    canvasRef,
+    parentDimensions,
+    hue,
+    luminance,
+    smoothAnimation,
+  ]);
 
   return (
     <div className={styles.colorBarWrapper} ref={containerRef}>

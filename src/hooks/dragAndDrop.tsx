@@ -22,9 +22,11 @@ interface DragState<T> {
 }
 
 function reducer<T>(state: DragState<T>, action: DragAction<T>) {
+  let items, cursor, rects, newTargetIndex, newPreviewItems, movedItem;
+
   switch (action.type) {
     case "resetItems":
-      const items = action.items;
+      items = action.items;
       return {
         ...state,
         items: [...items],
@@ -44,8 +46,9 @@ function reducer<T>(state: DragState<T>, action: DragAction<T>) {
     case "processMove":
       if (!state.isDragging) return state;
 
-      const { cursor, rects } = action;
-      let newTargetIndex = state.targetIndex;
+      cursor = action.cursor;
+      rects = action.rects;
+      newTargetIndex = state.targetIndex;
 
       for (let i = 0; i < rects.length; i++) {
         const rect = rects[i];
@@ -62,8 +65,8 @@ function reducer<T>(state: DragState<T>, action: DragAction<T>) {
 
       if (newTargetIndex === state.targetIndex) return state;
 
-      const newPreviewItems = [...state.items];
-      const [movedItem] = newPreviewItems.splice(state.sourceIndex, 1);
+      newPreviewItems = [...state.items];
+      [movedItem] = newPreviewItems.splice(state.sourceIndex, 1);
       newPreviewItems.splice(newTargetIndex, 0, movedItem);
 
       return {
@@ -136,18 +139,21 @@ export function useDragAndDrop<T extends { id: string }>({
     return itemElement;
   }
 
-  function getItemIndex(el: HTMLElement) {
-    const itemId = el.dataset.itemId;
-    const index = items.findIndex((item) => item.id === itemId);
-    return index;
-  }
+  const getItemIndex = useCallback(
+    (el: HTMLElement) => {
+      const itemId = el.dataset.itemId;
+      const index = items.findIndex((item) => item.id === itemId);
+      return index;
+    },
+    [items],
+  );
 
-  function captureItemBoundaries() {
+  const captureItemBoundaries = useCallback(() => {
     itemBoundingRects.current = items.map((item) => {
       const el = itemRefs.current[item.id]?.current;
       return el ? el.getBoundingClientRect() : new DOMRect();
     });
-  }
+  }, [itemRefs, items]);
 
   const handleDragMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
@@ -195,7 +201,14 @@ export function useDragAndDrop<T extends { id: string }>({
       document.addEventListener("touchend", handleDragEnd);
       document.addEventListener("touchcancel", handleDragEnd);
     },
-    [items, dispatch, handleDragEnd, handleDragMove],
+    [
+      items,
+      dispatch,
+      handleDragEnd,
+      handleDragMove,
+      captureItemBoundaries,
+      getItemIndex,
+    ],
   );
 
   // Set/cleanup event handlers
@@ -221,7 +234,7 @@ export function useDragAndDrop<T extends { id: string }>({
         });
       };
     }
-  }, [items, handleDragStart, disabled]);
+  }, [items, handleDragStart, disabled, itemRefs]);
 
   return {
     containerRef,

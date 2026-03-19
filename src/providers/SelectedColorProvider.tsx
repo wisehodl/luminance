@@ -1,19 +1,11 @@
-import { createContext, useReducer } from "react";
+import { useReducer } from "react";
 import type { ReactNode } from "react";
 
 import * as colorlib from "colorlib";
 
 import { colorReducer, createColorActions } from "@/hooks/color";
-import type { ColorActions } from "@/hooks/color";
 
-interface SelectedColorContextType {
-  selectedColor: colorlib.Color;
-  selectedColorActions: ColorActions;
-}
-
-export const SelectedColorContext = createContext<
-  SelectedColorContextType | undefined
->(undefined);
+import { SelectedColorContext } from "./context";
 
 export const SelectedColorProvider = ({
   children,

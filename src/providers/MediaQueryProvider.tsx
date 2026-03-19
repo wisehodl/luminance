@@ -1,22 +1,7 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
-enum ViewportMode {
-  DESKTOP = "desktop",
-  MOBILE_LANDSCAPE = "mobile-landscape",
-  MOBILE_PORTRAIT = "mobile-portrait",
-}
-
-interface MediaQueryContextType {
-  viewportMode: ViewportMode;
-  isDesktop: boolean;
-  isMobileLandscape: boolean;
-  isMobilePortrait: boolean;
-}
-
-export const MediaQueryContext = createContext<
-  MediaQueryContextType | undefined
->(undefined);
+import { MediaQueryContext, ViewportMode } from "./context";
 
 export const MediaQueryProvider = ({ children }: { children: ReactNode }) => {
   const [viewportMode, setViewportMode] = useState<ViewportMode>(

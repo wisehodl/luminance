@@ -7,7 +7,8 @@
     "build:wasm": "wasm-pack build colorlib -t bundler -d pkg --release",
     "check": "tsc --noEmit -p tsconfig.app.json",
     "clean": "rm -rf dist colorlib/pkg*",
-    "cypress": "1>/dev/null 2>/dev/null cypress open -d &",
+    "cypress:component": "cypress run --component",
+    "cypress:open": "1>/dev/null 2>/dev/null cypress open -d &",
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -20,10 +21,7 @@
     "test:e2e:firefox": "cypress run --e2e -b firefox"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^7.0.0",
-    "@fortawesome/free-regular-svg-icons": "^7.0.0",
-    "@fortawesome/free-solid-svg-icons": "^7.0.0",
-    "@fortawesome/react-fontawesome": "^0.2.3",
+    "lucide-react": "^0.542.0",
     "motion": "^12.23.12",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
