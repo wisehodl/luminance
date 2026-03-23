@@ -6,7 +6,7 @@ import type { ColorActions } from "@/hooks/color";
 import { onResize } from "@/hooks/window";
 import { Direction } from "@/types";
 import type { CartesianSpace } from "@/types";
-import { formatCssRgb, setMeasurements } from "@/util";
+import { setMeasurements } from "@/util";
 
 import ColorBar from "./ColorBar";
 import styles from "./ColorPicker.module.css";
@@ -41,12 +41,6 @@ function ColorPicker({
 
   return (
     <div className={styles.container} ref={containerRef}>
-      {/* <div */}
-      {/*   className={styles.preview} */}
-      {/*   style={{ */}
-      {/*     backgroundColor: formatCssRgb(color.hex), */}
-      {/*   }} */}
-      {/* ></div> */}
       <div className={styles.verticalGripLeft}>
         <GripSlider
           direction={Direction.VERTICAL}
