@@ -190,7 +190,10 @@ function ActionBar({
   return (
     <div className={styles.actionBar} data-cy="action-bar">
       <button
-        className={clsx(styles.actionButton, styles.iconButton)}
+        className={clsx(styles.actionButton, styles.iconButton, {
+          [styles.enabled]: canUndo,
+          [styles.disabled]: !canUndo,
+        })}
         data-cy="undo"
         disabled={!canUndo}
         onClick={handleUndo}
@@ -199,7 +202,10 @@ function ActionBar({
         <Undo2 size={16} />
       </button>
       <button
-        className={clsx(styles.actionButton, styles.iconButton)}
+        className={clsx(styles.actionButton, styles.iconButton, {
+          [styles.enabled]: canRedo,
+          [styles.disabled]: !canRedo,
+        })}
         data-cy="redo"
         disabled={!canRedo}
         onClick={handleRedo}
@@ -208,7 +214,7 @@ function ActionBar({
         <Redo2 size={16} />
       </button>
       <button
-        className={clsx(styles.actionButton, styles.iconButton)}
+        className={clsx(styles.actionButton, styles.iconButton, styles.enabled)}
         data-cy="add"
         onClick={actions.addColor}
         title="Add Color"
@@ -216,7 +222,10 @@ function ActionBar({
         <Plus size={16} />
       </button>
       <button
-        className={clsx(styles.actionButton, styles.iconButton)}
+        className={clsx(styles.actionButton, styles.iconButton, {
+          [styles.enabled]: hasSelection,
+          [styles.disabled]: !hasSelection,
+        })}
         data-cy="delete"
         disabled={!hasSelection}
         onClick={actions.deleteSelectedColors}
@@ -225,7 +234,10 @@ function ActionBar({
         <Trash2 size={16} />
       </button>
       <button
-        className={clsx(styles.actionButton, styles.iconButton)}
+        className={clsx(styles.actionButton, styles.iconButton, {
+          [styles.enabled]: hasSelection,
+          [styles.disabled]: !hasSelection,
+        })}
         data-cy="duplicate"
         disabled={!hasSelection}
         onClick={actions.duplicateSelectedColors}
@@ -234,9 +246,14 @@ function ActionBar({
         <Copy size={16} />
       </button>
       <button
-        className={clsx(styles.actionButton, styles.wordButton, {
-          [styles.activeButton]: mode === "reorder",
-        })}
+        className={clsx(
+          styles.actionButton,
+          styles.wordButton,
+          styles.enabled,
+          {
+            [styles.activeButton]: mode === "reorder",
+          },
+        )}
         data-cy="reorder"
         aria-pressed={mode === "reorder"}
         onClick={() =>
@@ -247,9 +264,14 @@ function ActionBar({
         Reorder
       </button>
       <button
-        className={clsx(styles.actionButton, styles.wordButton, {
-          [styles.activeButton]: mode === "select",
-        })}
+        className={clsx(
+          styles.actionButton,
+          styles.wordButton,
+          styles.enabled,
+          {
+            [styles.activeButton]: mode === "select",
+          },
+        )}
         data-cy="select"
         aria-pressed={mode === "select"}
         onClick={() =>
@@ -262,7 +284,11 @@ function ActionBar({
       {mode === "select" && (
         <>
           <button
-            className={clsx(styles.actionButton, styles.iconButton)}
+            className={clsx(
+              styles.actionButton,
+              styles.enabled,
+              styles.iconButton,
+            )}
             data-cy="select-all"
             onClick={actions.selectAll}
             title="Select All"
@@ -270,7 +296,11 @@ function ActionBar({
             <CheckCheck size={16} />
           </button>
           <button
-            className={clsx(styles.actionButton, styles.iconButton)}
+            className={clsx(
+              styles.actionButton,
+              styles.enabled,
+              styles.iconButton,
+            )}
             data-cy="clear"
             onClick={actions.clearSelection}
             title="Clear Selections"

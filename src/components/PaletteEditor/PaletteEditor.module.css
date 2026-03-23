@@ -25,7 +25,11 @@
   transition-timing-function: ease-out;
 }
 
-.actionBar .actionButton:hover {
+.actionBar .actionButton.disabled {
+  cursor: auto;
+}
+
+.actionBar .actionButton.enabled:hover {
   background-color: #f0f0f0;
   box-shadow:
     rgba(60, 64, 67, 0.25) 0px 3px 6px 0px,
@@ -33,7 +37,7 @@
   transform: translateY(-1px);
 }
 
-.actionBar .actionButton:active {
+.actionBar .actionButton.enabled:active {
   background-color: #d1d1d1;
   box-shadow:
     rgba(60, 64, 67, 0.3) 0px 1px 1px 0px,
