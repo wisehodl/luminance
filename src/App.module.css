@@ -1,30 +1,36 @@
+.background {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+}
+
 .appWrapper {
-  background-color: white;
-  height: 100%;
+  background-color: #f9f9f9;
+  min-height: 100%;
   width: 1200px;
   margin: 0 auto;
   box-shadow: 0 0 40px #7a7a7a;
-  border-left: 2px solid #7a7a7a;
-  border-right: 2px solid #7a7a7a;
-  overflow: hidden;
+  border-left: 1px solid #c9c9c9;
+  border-right: 1px solid #c9c9c9;
 }
 
 .mainLayout {
+  height: 100%;
   height: 100%;
   display: grid;
   grid-template-areas:
     "header header"
     "picker palette";
+  grid-template-rows: auto 1fr;
   grid-template-columns: 1fr 2fr;
-  grid-template-rows: 76px 1fr;
 }
 
 .appHeader {
   grid-area: header;
   display: flex;
-  align-items: baseline;
-  border-bottom: 2px solid #7a7a7a;
-  padding: 20px 30px 12px;
+  align-items: center;
+  border-bottom: 1px solid #c9c9c9;
+  padding: 20px 30px 22px;
 }
 
 .appHeader .title {
@@ -52,38 +58,41 @@
   grid-area: picker;
   display: flex;
   flex-direction: column;
-  border-right: 2px solid #7a7a7a;
+  border-right: 1px solid #c9c9c9;
 }
 
 .secondZone {
   min-width: 0;
   grid-area: palette;
-  color: #555;
-  font-style: italic;
+  display: flex;
+  flex-direction: column;
 }
 
 .colorHistoryWrapper {
+  flex-shrink: 0;
   box-sizing: border-box;
-  border-bottom: 2px solid #7a7a7a;
+  border-bottom: 1px solid #c9c9c9;
   position: relative;
 }
 
 .colorPickerWrapper {
-  border-bottom: 2px solid #7a7a7a;
-  padding: 20px 40px 40px;
+  border-bottom: 1px solid #c9c9c9;
+  padding: 20px 40px 26px;
 }
 
 .colorValuesWrapper {
-  padding: 40px;
-}
-
-.colorHistoryWrapper {
+  padding: 24px 40px;
 }
 
 .paletteEditorWrapper {
+  flex: 2;
+  min-height: 0;
+  overflow-y: hidden;
+  border-bottom: 1px solid #c9c9c9;
 }
 
 .paletteLibraryWrapper {
+  flex: 1;
 }
 
 /* Large */

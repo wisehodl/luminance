@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { GripHorizontal, GripVertical } from "lucide-react";
+
 import type { Setter } from "@/hooks/color";
 import { useSlider } from "@/hooks/slider";
 import { onResize } from "@/hooks/window";
@@ -18,7 +20,7 @@ function GripSlider({
   value,
   setValue,
   valueRange,
-  arrowDirection,
+  position,
   invert = false,
   parentDimensions,
 }: {
@@ -26,7 +28,7 @@ function GripSlider({
   value: number;
   setValue: Setter;
   valueRange: Range;
-  arrowDirection: "up" | "left" | "right";
+  position: "bottom" | "right" | "left";
   invert?: boolean;
   parentDimensions: CartesianSpace;
 }) {
@@ -52,48 +54,18 @@ function GripSlider({
     return onResize(() => setMeasurements(sliderRef, setOrigin, setDimensions));
   }, [sliderRef, parentDimensions]);
 
-  const upArrowStyle = {
-    borderLeft: "12px solid transparent",
-    borderRight: "12px solid transparent",
-    borderBottom: "25px solid black",
-  };
-
-  const leftArrowStyle = {
-    borderTop: "12px solid transparent",
-    borderBottom: "12px solid transparent",
-    borderRight: "25px solid black",
-  };
-
-  const rightArrowStyle = {
-    borderTop: "12px solid transparent",
-    borderBottom: "12px solid transparent",
-    borderLeft: "25px solid black",
-  };
-
-  const arrowStyle = (function () {
-    switch (arrowDirection) {
-      case "up":
-        return upArrowStyle;
-      case "left":
-        return leftArrowStyle;
-      case "right":
-        return rightArrowStyle;
-      default:
-        return {};
-    }
-  })();
+  const isVertical = direction === Direction.VERTICAL;
 
   return (
     <div className={styles.gripSlider} ref={sliderRef}>
       <div
         className={styles.grip}
         style={{
-          ...arrowStyle,
           cursor: isDragging ? "grabbing" : "grab",
           top: chooseValueByDirection(
             direction,
-            0,
-            -12 +
+            6,
+            -17 +
               valueToPosition(
                 valueRange.max - value,
                 dimensions.y - 1,
@@ -102,11 +74,24 @@ function GripSlider({
           ),
           left: chooseValueByDirection(
             direction,
-            -12 + valueToPosition(value, dimensions.x - 1, valueRange),
-            0,
+            -16 + valueToPosition(value, dimensions.x - 1, valueRange),
+            (() => {
+              if (position === "right") {
+                return 6;
+              } else if (position === "left") {
+                return -4;
+              }
+              return 0;
+            })(),
           ),
         }}
-      />
+      >
+        {isVertical ? (
+          <GripVertical size={24} strokeWidth={3} />
+        ) : (
+          <GripHorizontal size={24} strokeWidth={3} />
+        )}
+      </div>
     </div>
   );
 }

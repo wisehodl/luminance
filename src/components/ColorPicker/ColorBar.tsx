@@ -27,16 +27,20 @@ function ColorBar({
   parentDimensions: CartesianSpace;
 }) {
   // State
-  const [colorBar, setColorBar] = useState<colorlib.ColorBar | null>(null);
   const [origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
 
   // Refs
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const colorBarRef = useRef<colorlib.ColorBar | null>(null);
 
   // Hooks
   const smoothAnimation = useSmoothAnimation();
+
+  // Dimensions
+  const barWidth = parentDimensions.x > 0 ? parentDimensions.x - 54 : 0;
+  const barHeight = containerRef.current?.clientHeight;
 
   // Slider interaction
   const { sliderRef } = useSlider({
@@ -50,13 +54,14 @@ function ColorBar({
 
   // Update canvas when hue/luminance changes
   useEffect(() => {
-    if (colorBar && canvasRef.current) {
+    const bar = colorBarRef.current;
+    if (bar && canvasRef.current) {
       smoothAnimation(() => {
-        colorBar.fill_color(hue, luminance);
-        refreshColorBar(canvasRef.current!, colorBar);
+        bar.fill_color(hue, luminance);
+        refreshColorBar(canvasRef.current!, bar);
       });
     }
-  }, [hue, luminance, colorBar, smoothAnimation]);
+  }, [hue, luminance]);
 
   // Get measurements
   useEffect(() => {
@@ -71,30 +76,31 @@ function ColorBar({
 
   // Resize color bar
   useEffect(() => {
-    if (containerRef.current && canvasRef.current && parentDimensions.x > 0) {
-      const newHeight = containerRef.current.clientHeight;
-      const newWidth = parentDimensions.x - 54;
-      const newColorBar = new colorlib.ColorBar(newWidth, newHeight);
+    if (!containerRef.current || !canvasRef.current || parentDimensions.x <= 0)
+      return;
 
-      setColorBar(newColorBar);
+    colorBarRef.current?.free();
 
-      if (newColorBar) {
-        smoothAnimation(() => {
-          if (canvasRef.current) {
-            newColorBar.fill_color(hue, luminance);
-            refreshColorBar(canvasRef.current!, newColorBar);
-          }
-        });
+    const newHeight = containerRef.current.clientHeight;
+    const newWidth = parentDimensions.x - 54;
+    const bar = new colorlib.ColorBar(newWidth, newHeight);
+    colorBarRef.current = bar;
+
+    smoothAnimation(() => {
+      if (canvasRef.current) {
+        bar.fill_color(hue, luminance);
+        refreshColorBar(canvasRef.current!, bar);
       }
-    }
-  }, [
-    containerRef,
-    canvasRef,
-    parentDimensions,
-    hue,
-    luminance,
-    smoothAnimation,
-  ]);
+    });
+  }, [parentDimensions]);
+
+  // free on unmount
+  useEffect(() => {
+    return () => {
+      colorBarRef.current?.free();
+      colorBarRef.current = null;
+    };
+  }, []);
 
   return (
     <div className={styles.colorBarWrapper} ref={containerRef}>
@@ -102,15 +108,11 @@ function ColorBar({
         className={styles.colorBar}
         ref={sliderRef}
         style={{
-          width: colorBar?.get_width(),
-          height: colorBar?.get_height(),
+          width: barWidth,
+          height: barHeight,
         }}
       >
-        <canvas
-          ref={canvasRef}
-          width={colorBar?.get_width()}
-          height={colorBar?.get_height()}
-        />
+        <canvas ref={canvasRef} width={barWidth} height={barHeight} />
       </div>
     </div>
   );

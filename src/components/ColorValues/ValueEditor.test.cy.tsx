@@ -55,7 +55,7 @@ describe("component editor tests", () => {
     cy.dataCy("R-slider")
       .click()
       .dataCy("R-slider-bar")
-      .should("have.css", "width", "138px")
+      .should("have.css", "width", "140px")
       .dataCy("R-value-input")
       .should("have.value", "127");
 
@@ -80,7 +80,7 @@ describe("component editor tests", () => {
       .type("100")
       .should("have.value", "100")
       .dataCy("R-slider-bar")
-      .should("have.css", "width", "109px");
+      .should("have.css", "width", "110px");
 
     // Scrolling input should update value
     cy.dataCy("R-value-input")
@@ -134,7 +134,7 @@ describe("component editor tests", () => {
     cy.dataCy("R-slider")
       .click()
       .dataCy("R-slider-bar")
-      .should("have.css", "width", "138px")
+      .should("have.css", "width", "140px")
       .dataCy("R-value-input")
       .should("have.value", "127");
 

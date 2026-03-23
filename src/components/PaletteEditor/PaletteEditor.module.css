@@ -6,32 +6,461 @@
 }
 
 .actionBar {
-  height: 40px;
+  padding: 10px 11px;
+  border-bottom: 1px solid #c9c9c9;
+  display: flex;
+}
+
+.actionBar .actionButton {
+  cursor: pointer;
+  margin: 4px;
+  background-color: #e7e7e7;
+  border-radius: 0;
+  border: 1px solid #e2e2e2;
+  box-shadow:
+    rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.05) 0px 2px 6px 1px;
+  transition-property: background-color, box-shadow;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+.actionBar .actionButton:hover {
+  background-color: #f0f0f0;
+  box-shadow:
+    rgba(60, 64, 67, 0.25) 0px 3px 6px 0px,
+    rgba(60, 64, 67, 0.1) 0px 4px 8px 2px;
+  transform: translateY(-1px);
+}
+
+.actionBar .actionButton:active {
+  background-color: #d1d1d1;
+  box-shadow:
+    rgba(60, 64, 67, 0.3) 0px 1px 1px 0px,
+    inset 0px 1px 2px rgba(0, 0, 0, 0.2);
+  transform: translateY(1px);
+  transition-duration: 50ms;
+}
+
+.actionBar .iconButton {
+  aspect-ratio: 1;
+}
+
+.actionBar .wordButton {
+  font-size: 14px;
+  padding: 4px 4px;
+}
+
+.actionBar .activeButton {
+  background-color: #f8b800;
+  border-color: #e1964b;
+  box-shadow:
+    rgba(60, 64, 67, 0.25) 0px 1px 2px 0px,
+    0 0 8px 1px rgba(255, 163, 56, 0.5),
+    inset 0 0 4px rgba(255, 255, 255, 0.4);
+}
+
+.actionBar .activeButton:hover {
+  background-color: #fea944;
+  box-shadow:
+    rgba(60, 64, 67, 0.25) 0px 2px 4px 0px,
+    0 0 12px 2px rgba(255, 163, 56, 0.6),
+    inset 0 0 4px rgba(255, 255, 255, 0.5);
+  transform: translateY(-0.5px);
+}
+
+.actionBar .activeButton:active {
+  background-color: #eb8d16;
+  box-shadow:
+    rgba(60, 64, 67, 0.2) 0px 0px 1px 0px,
+    0 0 4px 0px rgba(255, 163, 56, 0.4),
+    inset 0px 1px 2px rgba(0, 0, 0, 0.2);
+  transform: translateY(0.5px);
+  transition-duration: 50ms;
 }
 
 .cardWrapper {
   flex: 1;
-  padding: 20px;
+  margin: 32px;
   display: grid;
+  border-radius: 8px;
   grid-template-columns: 1fr 1fr 4fr;
-  grid-template-rows: 40px 1fr;
+  grid-template-rows: auto 1fr;
   grid-template-areas:
-    ". . card-header"
+    "sync sync card-header"
     "preview selection palette";
+  overflow-y: auto;
+  /* border: 1px solid #ddd; */
+  box-shadow:
+    rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+.sync {
+  grid-area: sync;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #f6f6f6;
+  border-right: 2px solid #aaa;
+  border-bottom: 2px solid #aaa;
+  transition-property: background-color;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+.sync:hover {
+  background-color: #f1f1f1;
+}
+
+.sync:active {
+  background-color: #e7e7e7;
+}
+
+.sync .leftSpan {
+  flex: 1;
+  text-align: right;
+}
+
+.sync .middleSpan {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: middle;
+  margin: 0px 8px;
+}
+
+.sync .rightSpan {
+  flex: 1;
+  text-align: left;
 }
 
 .cardHeader {
   grid-area: card-header;
+  display: flex;
+  padding: 4px 8px 8px;
+  color: #292929;
+  background-color: #f6f6f6;
+  font-size: 20px;
+  font-weight: 700;
+  border-bottom: 2px solid #aaa;
+}
+
+.cardHeader .editableFieldWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.cardHeader .editableField {
+}
+
+.cardHeader .editingField {
+  outline: none;
+}
+
+.cardHeader .editableFieldButton {
+  cursor: pointer;
+  color: black;
+  background-color: rgba(0, 0, 0, 0.1);
+  margin: 2px -2px 2px 8px;
+  padding: 5px 6px;
+  border: none;
+  border-radius: 4px;
+  transition-property: background-color;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+.cardHeader .editableFieldButton:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.cardHeader .editableFieldButton:active {
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .pickerColor {
   grid-area: preview;
+  display: flex;
+  align-items: center;
+  padding: 10px;
 }
 
 .paletteColor {
   grid-area: selection;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.pickerColor .arrowIndicator {
+  margin-left: auto;
+}
+
+@keyframes slideRight {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideLeft {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.pickerColor:hover .arrowIndicator {
+  animation: slideRight 1.5s ease-in-out infinite;
+}
+
+.paletteColor:hover .arrowIndicator {
+  animation: slideLeft 1.5s ease-in-out infinite;
+}
+
+.previewPane .arrowIndicator {
+  transform: translateX(0);
+}
+
+.previewPane .arrowIndicatorDark {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.previewPane:hover .arrowIndicatorDark {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.previewPane:active .arrowIndicatorDark {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.previewPane .arrowIndicatorLight {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.previewPane:hover .arrowIndicatorLight {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.previewPane:active .arrowIndicatorLight {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .palette {
   grid-area: palette;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 0;
+  background-color: #f7f7f7;
+}
+
+.paletteRowWrapper {
+  flex: 1;
+  cursor: pointer;
+  min-height: 3em;
+}
+
+.paletteRowWrapper.draggable {
+  cursor: grab;
+}
+
+.paletteRowWrapper.dragging {
+  cursor: grabbing;
+}
+
+.paletteRowWrapper.dragging .paletteRow,
+.paletteRowWrapper.multiSelected .paletteRow {
+  transform: scale(0.96, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.paletteRow {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition:
+    transform 200ms ease-out,
+    border-radius 200ms ease-out;
+}
+
+.paletteRow .selectedIndicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.paletteRow .indicatorDark {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.paletteRow .indicatorLight {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.paletteRow .targettedIndicator {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 150ms ease-out;
+}
+
+.paletteRow:hover .targettedIndicator {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modeDecorator {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.checkDecorator {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkDecoratorDark {
+  color: rgba(0, 0, 0, 0.8);
+  border-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.15);
+}
+.checkDecoratorLight {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.gripDark {
+  color: rgba(0, 0, 0, 0.4);
+}
+.gripLight {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.paletteRowDataWithDecorator {
+  padding-right: 36px;
+}
+
+.paletteRowData {
+  display: flex;
+  padding: 10px;
+  align-items: center;
+}
+
+.paletteRowData .colorName {
+  font-size: 14px;
+}
+
+.paletteRowData .colorHex {
+  font-size: 14px;
+  font-family: monospace;
+  margin-left: auto;
+}
+
+.paletteRow .editableFieldWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.paletteRow .editableField,
+.paletteRow .field {
+  cursor: text;
+  border-radius: 4px;
+  margin-right: 2px;
+}
+
+.paletteRow .editableFieldDark,
+.paletteRow .fieldDark {
+  color: rgba(0, 0, 0, 0.95);
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.paletteRow .editableFieldLight,
+.paletteRow .fieldLight {
+  color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.paletteRow .editableFieldButton {
+  transition-property: color;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+.paletteRow .editableFieldButtonDark {
+  color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.paletteRow .editableFieldButtonDark:hover {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.paletteRow .editableFieldButtonDark:active {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.paletteRow .editableFieldButtonLight {
+  color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.paletteRow .editableFieldButtonLight:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.paletteRow .editableFieldButtonLight:active {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.paletteRow .editingField {
+  outline: none;
+}
+
+.paletteRow .colorHex {
+  width: 124px;
+}
+
+.colorName .editableField,
+.colorName .field {
+  padding: 1px 8px;
+}
+
+.colorHex .editableField,
+.colorHex .field {
+  padding: 3px 8px;
+}
+
+.paletteRow .editableFieldButton {
+  cursor: pointer;
+  padding-left: 4px;
+  border: none;
+  border-radius: 4px;
 }

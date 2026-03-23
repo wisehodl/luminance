@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import * as colorlib from "colorlib";
 
+import { useContrastToken } from "@/hooks/contrast";
 import { onResize } from "@/hooks/window";
 import type { CartesianSpace } from "@/types";
 import { formatCssRgb, setMeasurements, valueToPosition } from "@/util";
@@ -21,14 +22,11 @@ export function SquareCrosshair({
 }) {
   const [, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
-  const [darkCrosshairs, setDarkCrosshairs] = useState(true);
+  const crosshairColor = { dark: "black", light: "white" };
+  const token = useContrastToken(() => luminance);
   const containerRef = useRef<HTMLDivElement>(null);
   const lumRange = { min: 0, max: 1 };
   const hueRange = { min: 0, max: 359 };
-
-  useEffect(() => {
-    setDarkCrosshairs(luminance > 0.5);
-  }, [luminance]);
 
   useEffect(() => {
     setMeasurements(containerRef, setOrigin, setDimensions);
@@ -44,8 +42,8 @@ export function SquareCrosshair({
         style={{
           width: 1,
           height: dimensions.y,
-          backgroundColor: darkCrosshairs ? "black" : "white",
-          boxShadow: darkCrosshairs ? "0 0 2px black" : "0 0 2px white",
+          backgroundColor: crosshairColor[token],
+          boxShadow: `0 0 2px ${crosshairColor[token]}`,
           left: valueToPosition(hue, dimensions.x - 1, hueRange),
           top: 0,
         }}
@@ -55,8 +53,8 @@ export function SquareCrosshair({
         style={{
           width: dimensions.x,
           height: 1,
-          backgroundColor: darkCrosshairs ? "black" : "white",
-          boxShadow: darkCrosshairs ? "0 0 2px black" : "0 0 2px white",
+          backgroundColor: crosshairColor[token],
+          boxShadow: `0 0 2px ${crosshairColor[token]}`,
           left: 0,
           top: valueToPosition(1 - luminance, dimensions.y - 1, lumRange),
         }}
@@ -64,8 +62,8 @@ export function SquareCrosshair({
       <div
         className={styles.crossEye}
         style={{
-          borderColor: darkCrosshairs ? "black" : "white",
-          boxShadow: darkCrosshairs ? "0 0 1px black" : "0 0 1px white",
+          borderColor: crosshairColor[token],
+          boxShadow: `0 0 1px ${crosshairColor[token]}`,
           backgroundColor: formatCssRgb(hex),
           top: valueToPosition(1 - luminance, dimensions.y - 1, lumRange) - 6,
           left: valueToPosition(hue, dimensions.x - 1, hueRange) - 6,
@@ -88,13 +86,10 @@ export function BarCrosshair({
 }) {
   const [, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
-  const [darkCrosshairs, setDarkCrosshairs] = useState(true);
+  const crosshairColor = { dark: "black", light: "white" };
+  const token = useContrastToken(() => luminance);
   const containerRef = useRef<HTMLDivElement>(null);
   const chromaRange = { min: 0, max: 1 };
-
-  useEffect(() => {
-    setDarkCrosshairs(luminance > 0.5);
-  }, [luminance]);
 
   useEffect(() => {
     setMeasurements(containerRef, setOrigin, setDimensions);
@@ -110,8 +105,8 @@ export function BarCrosshair({
         style={{
           width: 1,
           height: dimensions.y,
-          backgroundColor: darkCrosshairs ? "black" : "white",
-          boxShadow: darkCrosshairs ? "0 0 2px black" : "0 0 2px white",
+          backgroundColor: crosshairColor[token],
+          boxShadow: `0 0 2px ${crosshairColor[token]}`,
           left: valueToPosition(chroma, dimensions.x - 1, chromaRange),
           top: 0,
         }}
@@ -119,8 +114,8 @@ export function BarCrosshair({
       <div
         className={styles.crossEye}
         style={{
-          borderColor: darkCrosshairs ? "black" : "white",
-          boxShadow: darkCrosshairs ? "0 0 1px black" : "0 0 1px white",
+          borderColor: crosshairColor[token],
+          boxShadow: `0 0 1px ${crosshairColor[token]}`,
           backgroundColor: formatCssRgb(hex),
           top: 6,
           left: valueToPosition(chroma, dimensions.x - 1, chromaRange) - 6,

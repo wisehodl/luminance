@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useMemo, useReducer } from "react";
 import type { ReactNode } from "react";
 
 import * as colorlib from "colorlib";
@@ -16,12 +16,18 @@ export const SelectedColorProvider = ({
     color: colorlib.Color.from_hex("00C9FA"),
   };
   const [colorState, colorDispatch] = useReducer(colorReducer, initialState);
-  const colorActions = createColorActions(colorDispatch);
+  const colorActions = useMemo(
+    () => createColorActions(colorDispatch),
+    [colorDispatch],
+  );
 
-  const value = {
-    selectedColor: colorState.color,
-    selectedColorActions: colorActions,
-  };
+  const value = useMemo(
+    () => ({
+      selectedColor: colorState.color,
+      selectedColorActions: colorActions,
+    }),
+    [colorState.color, colorActions],
+  );
 
   return (
     <SelectedColorContext.Provider value={value}>

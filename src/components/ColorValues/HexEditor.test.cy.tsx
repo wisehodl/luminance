@@ -49,11 +49,12 @@ describe("hex editor tests", () => {
     cy.get("@color").should("have.text", "000000");
 
     cy.get("@value").blur();
-    cy.get("@value").should("have.value", "#000000");
+    cy.get("@value").should("have.value", "#000");
     cy.get("@color").should("have.text", "000000");
 
     // Type a new value
-    cy.get("@value").focus().type("{backspace}");
+    cy.get("@value").focus();
+    cy.get("@value").type("{backspace}");
     cy.get("@value").should("have.value", "");
     cy.get("@color").should("have.text", "000000");
 
@@ -62,11 +63,11 @@ describe("hex editor tests", () => {
     cy.get("@color").should("have.text", "000000");
 
     cy.get("@value").type("c");
-    cy.get("@value").should("have.value", "#ABC");
-    cy.get("@color").should("have.text", "AABBCC");
+    cy.get("@value").should("have.value", "abc");
+    cy.get("@color").should("have.text", "000000");
 
     cy.get("@value").blur();
-    cy.get("@value").should("have.value", "#AABBCC");
+    cy.get("@value").should("have.value", "#ABC");
     cy.get("@color").should("have.text", "AABBCC");
 
     // Invalid blur resets to last valid color

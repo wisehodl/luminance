@@ -102,8 +102,8 @@ describe("space editor tests", () => {
     });
 
     cy.dataCy("rgb-value").should("have.text", "RGB (16, 75, 74)");
-    cy.dataCy("hsv-value").should("have.text", "HSV (178, 0.78, 0.29)");
-    cy.dataCy("hcl-value").should("have.text", "HCL (178, 0.78, 0.25)");
+    cy.dataCy("hsv-value").should("have.text", "HSV (179, 0.78, 0.29)");
+    cy.dataCy("hcl-value").should("have.text", "HCL (179, 0.78, 0.25)");
     cy.dataCy("hex-value").should("have.text", "HEX: #104B4A");
   });
 });

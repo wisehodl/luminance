@@ -18,6 +18,7 @@ function ColorHistory({
   disabled: boolean;
 }) {
   const [history, setHistory] = useState<Color[]>([]);
+  const colorValue = color.hex.to_code();
   const maxItems = 50;
 
   useEffect(() => {
@@ -31,10 +32,10 @@ function ColorHistory({
         const newHistory = [color, ...prev];
         return newHistory.slice(0, maxItems);
       });
-    }, 1000);
+    }, 2000);
 
     return () => clearTimeout(timer);
-  }, [color, disabled]);
+  }, [colorValue, disabled]);
 
   const handleClick = (historyColor: Color) => {
     setColor(historyColor);

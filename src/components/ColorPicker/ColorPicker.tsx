@@ -41,19 +41,19 @@ function ColorPicker({
 
   return (
     <div className={styles.container} ref={containerRef}>
-      <div
-        className={styles.preview}
-        style={{
-          backgroundColor: formatCssRgb(color.hex),
-        }}
-      ></div>
+      {/* <div */}
+      {/*   className={styles.preview} */}
+      {/*   style={{ */}
+      {/*     backgroundColor: formatCssRgb(color.hex), */}
+      {/*   }} */}
+      {/* ></div> */}
       <div className={styles.verticalGripLeft}>
         <GripSlider
           direction={Direction.VERTICAL}
           value={color.hcl.l}
           setValue={actions.hcl.setL}
           valueRange={lumRange}
-          arrowDirection="right"
+          position="left"
           invert={true}
           parentDimensions={dimensions}
         />
@@ -77,7 +77,7 @@ function ColorPicker({
           value={color.hcl.l}
           setValue={actions.hcl.setL}
           valueRange={lumRange}
-          arrowDirection="left"
+          position="right"
           invert={true}
           parentDimensions={dimensions}
         />
@@ -88,7 +88,7 @@ function ColorPicker({
           value={color.hcl.h}
           setValue={actions.hcl.setH}
           valueRange={hueRange}
-          arrowDirection="up"
+          position="bottom"
           parentDimensions={dimensions}
         />
       </div>

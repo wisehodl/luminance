@@ -23,15 +23,13 @@ function ColorSquare({
   parentDimensions: CartesianSpace;
 }) {
   // State
-  const [colorSquare, setColorSquare] = useState<colorlib.ColorSquare | null>(
-    null,
-  );
   const [origin, setOrigin] = useState<CartesianSpace>({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState<CartesianSpace>({ x: 0, y: 0 });
 
   // Refs
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const colorSquareRef = useRef<colorlib.ColorSquare | null>(null);
 
   // Hooks
   const smoothAnimation = useSmoothAnimation();
@@ -56,13 +54,14 @@ function ColorSquare({
 
   // Update canvas when chroma changes
   useEffect(() => {
-    if (colorSquare && canvasRef.current) {
+    const square = colorSquareRef.current;
+    if (square && canvasRef.current) {
       smoothAnimation(() => {
-        colorSquare.fill_chroma(chroma);
-        refreshColorSquare(canvasRef.current!, colorSquare);
+        square.fill_chroma(chroma);
+        refreshColorSquare(canvasRef.current!, square);
       });
     }
-  }, [chroma, colorSquare, smoothAnimation]);
+  }, [chroma]);
 
   // Add event listeners
   useEffect(() => {
@@ -78,26 +77,34 @@ function ColorSquare({
     return onResize(() =>
       setMeasurements(containerRef, setOrigin, setDimensions),
     );
-  }, [containerRef, parentDimensions]);
+  }, [parentDimensions]);
 
   // Resize square
   useEffect(() => {
-    if (containerRef.current && canvasRef.current && parentDimensions.x > 0) {
-      const newSize = parentDimensions.x - 54;
-      const newColorSquare = new colorlib.ColorSquare(newSize);
+    if (!containerRef.current || !canvasRef.current || parentDimensions.x <= 0)
+      return;
 
-      setColorSquare(newColorSquare);
+    colorSquareRef.current?.free();
 
-      if (newColorSquare) {
-        smoothAnimation(() => {
-          if (canvasRef.current) {
-            newColorSquare.fill_chroma(chroma);
-            refreshColorSquare(canvasRef.current, newColorSquare);
-          }
-        });
+    const newSize = parentDimensions.x - 54;
+    const square = new colorlib.ColorSquare(newSize);
+    colorSquareRef.current = square;
+
+    smoothAnimation(() => {
+      if (canvasRef.current) {
+        square.fill_chroma(chroma);
+        refreshColorSquare(canvasRef.current, square);
       }
-    }
-  }, [containerRef, canvasRef, parentDimensions, chroma, smoothAnimation]);
+    });
+  }, [containerRef, canvasRef, parentDimensions]);
+
+  // free on unmount
+  useEffect(() => {
+    return () => {
+      colorSquareRef.current?.free();
+      colorSquareRef.current = null;
+    };
+  }, []);
 
   return (
     <div className={styles.colorSquareWrapper} ref={containerRef}>
@@ -105,14 +112,14 @@ function ColorSquare({
         className={styles.colorSquare}
         ref={crosshairRef}
         style={{
-          width: colorSquare?.get_size(),
-          height: colorSquare?.get_size(),
+          width: colorSquareRef.current?.get_size(),
+          height: colorSquareRef.current?.get_size(),
         }}
       >
         <canvas
           ref={canvasRef}
-          width={colorSquare?.get_size()}
-          height={colorSquare?.get_size()}
+          width={colorSquareRef.current?.get_size()}
+          height={colorSquareRef.current?.get_size()}
         />
       </div>
     </div>

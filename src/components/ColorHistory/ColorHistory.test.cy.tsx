@@ -53,10 +53,11 @@ describe("color history", () => {
     cy.enableTransitions();
   });
 
-  it("adds stable color values after 1 second", () => {
+  it("adds stable color values after 3 seconds", () => {
     // add stable values to history
-    cy.dataCy("hex-value-input").as("value").clear().type("#00F536");
-    cy.tick(1000);
+    cy.dataCy("hex-value-input").as("value").clear().type("#00F536").blur();
+    cy.wait(0); // let blur take effect
+    cy.tick(3000);
 
     cy.dataCy("color-history").children().should("have.length", 1);
     cy.dataCy("history-color-0").should(
@@ -65,8 +66,9 @@ describe("color history", () => {
       "rgb(0, 245, 54)",
     );
 
-    cy.get("@value").clear().type("#E23AEC");
-    cy.tick(1000);
+    cy.get("@value").clear().type("#E23AEC").blur();
+    cy.wait(0);
+    cy.tick(3000);
 
     cy.dataCy("color-history").children().should("have.length", 2);
     cy.dataCy("history-color-0").should(
@@ -81,14 +83,15 @@ describe("color history", () => {
 
     // disable history
     cy.dataCy("disabled-checkbox").click();
-    cy.get("@value").clear().type("#00C3EE");
-    cy.tick(1000);
+    cy.get("@value").clear().type("#00C3EE").blur();
+    cy.wait(0);
+    cy.tick(3000);
 
     cy.dataCy("color-history").children().should("have.length", 2);
 
     // re-enable history
     cy.dataCy("disabled-checkbox").click();
-    cy.tick(1000);
+    cy.tick(3000);
 
     cy.dataCy("color-history").children().should("have.length", 3);
   });

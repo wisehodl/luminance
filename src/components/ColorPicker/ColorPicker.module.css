@@ -1,9 +1,8 @@
 .container {
   display: grid;
   grid-template-columns: 25px 1fr 25px;
-  grid-template-rows: 50px 1fr 25px;
+  grid-template-rows: 1fr 25px;
   grid-template-areas:
-    ". preview ."
     "leftGrip square rightGrip"
     ". bottomGrip ."
     ". bar .";
@@ -13,14 +12,20 @@
   grid-area: preview;
   height: 25px;
   margin-bottom: 15px;
-  border: 2px solid #7a7a7a;
+  border: 1px solid #7a7a7a;
+  box-shadow:
+    rgba(0, 0, 0, 0.16) 0px 3px 6px,
+    rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 .pickerSquare {
   grid-area: square;
   position: relative;
   aspect-ratio: 1/1;
-  border: 2px solid #7a7a7a;
+  border: 1px solid #7a7a7a;
+  box-shadow:
+    rgba(0, 0, 0, 0.16) 0px 3px 6px,
+    rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 .pickerBar {
@@ -28,7 +33,49 @@
   position: relative;
   height: 25px;
   margin-top: 15px;
-  border: 2px solid #7a7a7a;
+  border: 1px solid #7a7a7a;
+  box-shadow:
+    rgba(0, 0, 0, 0.16) 0px 3px 6px,
+    rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+/* Grips */
+.gripSlider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.grip {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e7e7e7;
+  border: 1px solid #c9c9c9;
+  border-radius: 4px;
+  color: #8b8b8b;
+  transition:
+    background-color 150ms,
+    box-shadow 150ms;
+  box-shadow:
+    rgba(0, 0, 0, 0.12) 0px 2px 4px,
+    rgba(0, 0, 0, 0.2) 0px 2px 4px;
+}
+
+.horizontalGrip .grip {
+  height: 20px;
+  width: 32px;
+}
+
+.verticalGripLeft .grip,
+.verticalGripRight .grip {
+  height: 32px;
+  width: 22px;
+}
+
+.horizontalGrip {
+  grid-area: bottomGrip;
 }
 
 .verticalGripLeft {
@@ -37,10 +84,6 @@
 
 .verticalGripRight {
   grid-area: rightGrip;
-}
-
-.horizontalGrip {
-  grid-area: bottomGrip;
 }
 
 /* Color Square */
@@ -93,17 +136,4 @@
     border-color 350ms,
     box-shadow 400ms;
   pointer-events: none;
-}
-
-/* Square Grips */
-.gripSlider {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.grip {
-  position: absolute;
-  width: 0;
-  height: 0;
 }

@@ -11,7 +11,12 @@
   max-height: 94px;
   flex: 1;
   min-height: 0;
-  border: 2px solid #7a7a7a;
+  background-color: #f7f7f7;
+  border: 1px solid #c9c9c9;
+  border-radius: 4px;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 2px 4px,
+    rgba(0, 0, 0, 0.15) 0px 2px 4px;
 }
 
 .componentWrapper {
@@ -22,7 +27,6 @@
   min-height: 0;
   font-family: monospace;
   border-top: 1px solid #7a7a7a;
-  border-bottom: 1px solid #7a7a7a;
 }
 
 .componentWrapper:first-of-type {
@@ -37,7 +41,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-right: 2px solid #7a7a7a;
+  border-right: 1px solid #7a7a7a;
 }
 
 .section:last-of-type {
@@ -65,7 +69,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  background-color: #aaa;
+  background-color: #c1c1c1;
   pointer-events: none;
 }
 
@@ -84,6 +88,9 @@
   user-select: none;
   background: none;
   border: none;
+  transition-property: background-color;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
 }
 
 .button:hover {
@@ -114,9 +121,14 @@
   display: flex;
   align-items: stretch;
   font-family: monospace;
-  border: 2px solid #7a7a7a;
+  background-color: #f7f7f7;
+  border: 1px solid #c9c9c9;
+  border-radius: 4px;
   height: 25px;
   max-width: 150px;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 2px 4px,
+    rgba(0, 0, 0, 0.15) 0px 2px 4px;
 }
 
 .hexLabel {

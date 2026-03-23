@@ -59,7 +59,11 @@ export function useSlider({
   const maxPosition = useRef(0);
 
   // Internal position management
-  const [position, setPosition] = useState(0);
+  const position = valueToPosition(
+    value,
+    chooseValueByDirection(direction, dimensions.x, dimensions.y),
+    valueRange,
+  );
   const positionRef = useRef(position);
 
   // Hooks
@@ -200,15 +204,6 @@ export function useSlider({
     onScrollUp: handleScrollUp,
     onScrollDown: handleScrollDown,
   });
-
-  useEffect(() => {
-    const newPosition = valueToPosition(
-      value,
-      maxPosition.current,
-      valueRangeRef.current,
-    );
-    setPosition(newPosition);
-  }, [value, setPosition]);
 
   // Set up entry listeners
   useEffect(() => {

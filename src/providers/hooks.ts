@@ -1,7 +1,6 @@
 import { useContext } from "react";
 
-import { MediaQueryContext } from "./MediaQueryProvider";
-import { SelectedColorContext } from "./SelectedColorProvider";
+import { MediaQueryContext, SelectedColorContext } from "./context";
 
 export function useMediaQuery() {
   const context = useContext(MediaQueryContext);

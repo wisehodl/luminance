@@ -36,7 +36,10 @@
 //   }
 // }
 
-Cypress.Commands.add("dataCy", (value: string) => {
+Cypress.Commands.add("dataCy", (value: string, noTimeout?: boolean) => {
+  if (noTimeout) {
+    return cy.get(`[data-cy="${value}"]`, { timeout: 0 });
+  }
   return cy.get(`[data-cy="${value}"]`);
 });
 

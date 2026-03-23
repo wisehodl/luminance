@@ -45,6 +45,11 @@ function ColorValues({
 
   return (
     <div className={styles.colorValuesWrapper} ref={wrapperRef}>
+      <HexEditor
+        color={color.hex}
+        actions={actions.hex}
+        onKeyDown={handleKeyDown}
+      />
       <SpaceEditor
         space="HCL"
         color={color.hcl}
@@ -61,11 +66,6 @@ function ColorValues({
         space="RGB"
         color={color.rgb}
         actions={actions.rgb}
-        onKeyDown={handleKeyDown}
-      />
-      <HexEditor
-        color={color.hex}
-        actions={actions.hex}
         onKeyDown={handleKeyDown}
       />
     </div>

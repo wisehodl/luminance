@@ -111,3 +111,11 @@ export function roundTo(
 export function formatCssRgb(hex: Hex) {
   return `rgb(${hex.r},${hex.g},${hex.b})`;
 }
+
+export function formatCssRgbs(hex: Hex, alpha: number) {
+  return `rgb(${hex.r},${hex.g},${hex.b},${roundTo(alpha, 2)})`;
+}
+
+export function randomId(): string {
+  return Math.random().toString(36).slice(2, 8);
+}

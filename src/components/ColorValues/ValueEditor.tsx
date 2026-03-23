@@ -6,6 +6,7 @@ import * as colorlib from "colorlib";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import type { HexColorActions } from "@/hooks/color";
+import { extractHexValue, formatHexString } from "@/hooks/hex";
 import { useScroll } from "@/hooks/scroll";
 import { useSlider } from "@/hooks/slider";
 import { onResize } from "@/hooks/window";
@@ -340,30 +341,6 @@ function useLongPressRepeat(
 // Hex Editor //
 // ---------- //
 
-const extractHexValue = (value: string): string | null => {
-  const match = value.match(/^#?([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/);
-  return match ? match[1] : null;
-};
-
-const formatHexString = (
-  color: colorlib.Hex,
-  preserveShortFormat: boolean = false,
-): string => {
-  const hexValue = color.to_code();
-
-  if (preserveShortFormat) {
-    if (
-      hexValue[0] === hexValue[1] &&
-      hexValue[2] === hexValue[3] &&
-      hexValue[4] === hexValue[5]
-    ) {
-      return `#${hexValue[0]}${hexValue[2]}${hexValue[4]}`;
-    }
-  }
-
-  return `#${color.to_code()}`;
-};
-
 export function HexEditor({
   color,
   actions,
@@ -375,24 +352,34 @@ export function HexEditor({
 }) {
   const [inputValue, setInputValue] = useState(formatHexString(color));
   const [isShortHex, setIsShortHex] = useState(false);
+  const isFocused = useRef(false);
 
   useEffect(() => {
-    setInputValue(formatHexString(color, isShortHex));
+    if (!isFocused.current) {
+      setInputValue(formatHexString(color, isShortHex));
+    }
   }, [color, isShortHex]);
+
+  const onFocus = (e: ChangeEvent<HTMLInputElement>) => {
+    isFocused.current = true;
+    e.target.select();
+  };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
+  };
 
-    const hex = extractHexValue(value);
+  const onBlur = () => {
+    isFocused.current = false;
+    const hex = extractHexValue(inputValue);
     if (hex) {
       setIsShortHex(hex.length === 3);
       const newColor = colorlib.Hex.from_code(hex);
       actions.setHex(newColor);
+      setInputValue(formatHexString(newColor, isShortHex));
+      return;
     }
-  };
-
-  const onBlur = () => {
     setInputValue(formatHexString(color));
   };
 
@@ -414,7 +401,7 @@ export function HexEditor({
           value={inputValue}
           onChange={onChange}
           onBlur={onBlur}
-          onFocus={(e) => e.target.select()}
+          onFocus={onFocus}
           onKeyDown={handleKeyDown}
         />
       </div>
