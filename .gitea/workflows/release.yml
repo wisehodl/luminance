@@ -81,7 +81,7 @@ jobs:
       # Create archive
       - name: Create archive
         run: |
-          echo "$TAG_NAME" >> VERSION
+          echo "$TAG_NAME" > VERSION
           tar -czvf ${{ env.REPO_NAME }}-${{ env.TAG_NAME }}.tar.gz dist VERSION
 
       # Create release
