@@ -384,13 +384,15 @@ function PaletteCard({
       <CardHeader name={cardState.name} onNameChange={actions.setCardName} />
       <PickerColor
         pickerColor={pickerColor}
-        paletteColorId={selectedColor?.id || null}
-        setPaletteColor={actions.setColorValue}
+        setPickerColor={setPickerColor}
+        selectedColor={selectedColor?.hex || null}
         isSynced={isSynced}
       />
       <PaletteColor
         selectedColor={selectedColor?.hex || null}
-        setPickerColor={setPickerColor}
+        pickerColor={pickerColor}
+        paletteColorId={selectedColor?.id || null}
+        setPaletteColor={actions.setColorValue}
         isSynced={isSynced}
       />
       <Palette cardState={cardState} actions={actions} mode={mode} />
@@ -446,20 +448,20 @@ function CardHeader({
 
 function PickerColor({
   pickerColor,
-  paletteColorId,
-  setPaletteColor,
+  setPickerColor,
+  selectedColor,
   isSynced,
 }: {
   pickerColor: HexColor;
-  paletteColorId: string | null;
-  setPaletteColor: (id: string, hex: HexColor) => void;
+  setPickerColor: (hex: HexColor) => void;
+  selectedColor: HexColor | null;
   isSynced: boolean;
 }) {
   const arrowToken = useContrastToken(() => luminanceFromHex(pickerColor));
 
   const handleClick = () => {
-    if (!isSynced && paletteColorId) {
-      setPaletteColor(paletteColorId, pickerColor);
+    if (!isSynced && selectedColor) {
+      setPickerColor(selectedColor);
     }
   };
 
@@ -472,7 +474,7 @@ function PickerColor({
         backgroundColor: formatHexString(pickerColor),
       }}
       onClick={handleClick}
-      title={!isSynced ? "Send to Picker" : ""}
+      title={!isSynced ? "Set to Palette Color" : ""}
     >
       {!isSynced && (
         <div
@@ -482,7 +484,7 @@ function PickerColor({
             [styles.arrowIndicatorLight]: arrowToken === "light",
           })}
         >
-          <ChevronsRight size={32} />
+          <ChevronsLeft size={32} />
         </div>
       )}
     </div>
@@ -491,19 +493,23 @@ function PickerColor({
 
 function PaletteColor({
   selectedColor,
-  setPickerColor,
+  pickerColor,
+  paletteColorId,
+  setPaletteColor,
   isSynced,
 }: {
   selectedColor: HexColor | null;
-  setPickerColor: (hex: HexColor) => void;
+  pickerColor: HexColor;
+  paletteColorId: string | null;
+  setPaletteColor: (id: string, hex: HexColor) => void;
   isSynced: boolean;
 }) {
   const bgColor = selectedColor || DEFAULT_BG;
   const arrowToken = useContrastToken(() => luminanceFromHex(bgColor));
 
   const handleClick = () => {
-    if (!isSynced && selectedColor) {
-      setPickerColor(selectedColor);
+    if (!isSynced && paletteColorId) {
+      setPaletteColor(paletteColorId, pickerColor);
     }
   };
 
@@ -516,7 +522,7 @@ function PaletteColor({
         backgroundColor: formatHexString(bgColor),
       }}
       onClick={handleClick}
-      title={!isSynced ? "Send to Palette" : ""}
+      title={!isSynced ? "Set to Picker Color" : ""}
     >
       {!isSynced && (
         <div
@@ -526,7 +532,7 @@ function PaletteColor({
             [styles.arrowIndicatorLight]: arrowToken === "light",
           })}
         >
-          <ChevronsLeft size={32} />
+          <ChevronsRight size={32} />
         </div>
       )}
     </div>

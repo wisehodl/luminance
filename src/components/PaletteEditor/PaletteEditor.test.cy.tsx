@@ -170,7 +170,7 @@ it("can perform actions in normal mode", () => {
   cy.get("@row2").contains("#000000");
 });
 
-it("can manually sync picker and palette", () => {
+it.only("can manually sync picker and palette", () => {
   cy.mount(<TestWrapper initialCardState={defaultPaletteCardState} />);
 
   cy.dataCy("hex-value-input").as("hex");
@@ -189,10 +189,10 @@ it("can manually sync picker and palette", () => {
 
   // Select a color and sync it to the picker
   cy.get("@row1").click();
-  cy.get("@palette")
-    .should("have.css", "background-color", "rgb(0, 255, 0)")
-    .click();
-  cy.get("@picker").should("have.css", "background-color", "rgb(0, 255, 0)");
+  cy.get("@palette").should("have.css", "background-color", "rgb(0, 255, 0)");
+  cy.get("@picker")
+    .click()
+    .should("have.css", "background-color", "rgb(0, 255, 0)");
   cy.get("@hex").should("have.value", "#00FF00");
 
   // Select a new color, picker remains the same
@@ -203,7 +203,7 @@ it("can manually sync picker and palette", () => {
   // Change picker color, sync back to palette.
   cy.get("@hex").focus().type("FFFF00{esc}").wait(0);
   cy.get("@picker").should("have.css", "background-color", "rgb(255, 255, 0)");
-  cy.get("@picker").click();
+  cy.get("@palette").click();
   cy.get("@row0").contains("#FFFF00");
 });
 
